@@ -173,5 +173,60 @@ func convert(_ celsius: Double) -> Double {
     return fah
 }
 print(convert(100))
+// DATA TYPES /////////////////////////////////////////////////////////////
+var someName="Neermita"
+print(someName.uppercased())
+print(someName.count)
+print(someName.hasPrefix("N"))
+let num = 10203324325
+print("Is \(num) a mutiple of 3: ",num.isMultiple(of: 3))
 
+// ARRAYS /////////////////////////////////////////////////////////////////
+var albums = ["Pop", "Rock"]
+albums.append("Metal")
+
+print(albums.count)
+albums.remove(at:0)
+print(albums.count)
+print(albums.contains("Metal"))
+print("Sorted array: ",albums.sorted())
+print("Reversed array: ", albums.reversed())
+
+// DICTIONARIES ///////////////////////////////////////////////////////////
+let employee2 = ["name": "Taylor Swift", "job": "Singer", "location": "Nashville"]
+print(employee2["name"])
+print(employee2["idkey"])
+print(employee2["name", default:"Unknown"])
+print(employee2["idkey", default:"Unknown"])
+
+var height = [String: Int]()
+height["Taylor"] = 180
+print(height.count)
+print(height.removeAll())
+
+// SETS ///////////////////////////////////////////////////////////////////
+
+let people = Set(["Denzel Washington", "Tom Cruise", "Nicolas Cage", "Samuel L Jackson"])
+print(people)
+
+var peoples = Set<String>()
+peoples.insert("Denzel Washington")
+peoples.insert("Tom Cruise")
+print(peoples.count)
+print(peoples.contains("Denzel Washington"))
+print(peoples.sorted())
+
+// ENUMS ////////////////////////////////////////////////////////////////
+
+enum Weekday {
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
+    case sunday
+}
+var day = Weekday.monday
+print(day)
 //CLOSURES /////////////////////////////////////////////////////////////
