@@ -162,5 +162,16 @@ func doSomething(with value: Int) -> Int {
 }
 
 print(doSomething(with: 10))
+let number = 120
+print(number.isMultiple(of: 3))
+
+// practice
+func convert(_ celsius: Double) -> Double {
+    
+    let cel = celsius
+    let fah = cel*9/5 + 32
+    return fah
+}
+print(convert(100))
 
 //CLOSURES /////////////////////////////////////////////////////////////
