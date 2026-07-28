@@ -192,6 +192,9 @@ print(albums.contains("Metal"))
 print("Sorted array: ",albums.sorted())
 print("Reversed array: ", albums.reversed())
 
+var threes = Array(repeating: 0, count:3)
+print(threes)
+
 // DICTIONARIES ///////////////////////////////////////////////////////////
 let employee2 = ["name": "Taylor Swift", "job": "Singer", "location": "Nashville"]
 print(employee2["name"])
@@ -229,4 +232,97 @@ enum Weekday {
 }
 var day = Weekday.monday
 print(day)
+
+// TYPE ANNOTATIONS /////////////////////////////////////////////////////
+let surname: String = "Lasso"
+var score: Int = 0
+var isStudent: Bool = true
+var album: [String] = ["Red", "Fearless"]
+var user: [String: String] = ["id": "@twostraws"]
+
+//type inference
+var clues = [String]()
+//type annotation
+var cities: [String] = []
+
+enum UIStyle {
+    case light, dark, system
+}
+
+var style = UIStyle.light
+
+let username: String
+username = "@nemo"
+
+enum Weather {
+    case sun, rain, wind, snow, unknown
+}
+// IF-ELSE & SWITCH CASE //////////////////////////////////////////////////////////
+func weather(_ weather: Weather){
+    
+    
+    if weather == Weather.sun{print("Its sunny")}
+    else if weather == Weather.rain{print("Its raining")}
+    else if weather == Weather.wind{print("Its windy")}
+    else if weather == Weather.snow{print("Its snowing")}
+    else{print("Unknown")}
+    
+    switch weather{
+    case .sun: print("Its sunny!!")
+    case .rain: print("Its raining!!")
+    case .wind: print("Its windy!!")
+    case .snow: print("Its snowing!!")
+    default: print("Unknown")
+    }
+    
+    let day = 5
+    print("My true love gave to me…")
+
+    switch day {
+    case 5:
+        print("5 golden rings")
+        fallthrough
+    case 4:
+        print("4 calling birds")
+        fallthrough
+    case 3:
+        print("3 French hens")
+        fallthrough
+    case 2:
+        print("2 turtle doves")
+        fallthrough
+    default:
+        print("A partridge in a pear tree")
+    }
+}
+
+weather(Weather.rain)
+
+// LOOPS ////////////////////////////////////////////////////////////////
+
+for x in 1...4{
+    print(x*2)
+}
+for i in 1..<5 {
+    print("Counting 1 up to 5: \(i)")
+}
+
+var countdown=5
+while countdown>0{
+    print(countdown)
+    countdown-=1
+}
+let id = Int.random(in: 1...1000)
+
+
+let filenames = ["me.jpg", "work.txt", "sophie.jpg", "logo.psd"]
+
+for filename in filenames {
+    if filename.hasSuffix(".jpg") == false {
+        continue
+    }
+
+    print("Found picture: \(filename)")
+}
 //CLOSURES /////////////////////////////////////////////////////////////
+
