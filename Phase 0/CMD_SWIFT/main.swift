@@ -195,17 +195,38 @@ print("Reversed array: ", albums.reversed())
 var threes = Array(repeating: 0, count:3)
 print(threes)
 
+
 // DICTIONARIES ///////////////////////////////////////////////////////////
 let employee2 = ["name": "Taylor Swift", "job": "Singer", "location": "Nashville"]
+var namesOfIntegers: [Int: String] = [:]
 print(employee2["name"])
 print(employee2["idkey"])
 print(employee2["name", default:"Unknown"])
 print(employee2["idkey", default:"Unknown"])
 
+
 var height = [String: Int]()
 height["Taylor"] = 180
 print(height.count)
 print(height.removeAll())
+
+
+var airports = ["London": "Heathrow", "New York": "John F. Kennedy", "San Francisco": "San Francisco International"]
+
+
+for airportCode in airports.keys {
+    print("Airport code: \(airportCode)")
+}
+// Airport code: LHR
+// Airport code: YYZ
+
+
+for airportName in airports.values {
+    print("Airport name: \(airportName)")
+}
+
+
+
 
 // SETS ///////////////////////////////////////////////////////////////////
 
@@ -213,11 +234,23 @@ let people = Set(["Denzel Washington", "Tom Cruise", "Nicolas Cage", "Samuel L J
 print(people)
 
 var peoples = Set<String>()
+var favoriteGenres: Set<String>=[]
+
 peoples.insert("Denzel Washington")
 peoples.insert("Tom Cruise")
 print(peoples.count)
 print(peoples.contains("Denzel Washington"))
 print(peoples.sorted())
+let houseAnimals: Set = ["🐶", "🐱"]
+let farmAnimals: Set = ["🐮", "🐔", "🐑", "🐶", "🐱"]
+let cityAnimals: Set = ["🐦", "🐭"]
+
+
+print(houseAnimals.isSubset(of: farmAnimals))
+// true
+print(farmAnimals.isSuperset(of: houseAnimals))
+// true
+print(farmAnimals.isDisjoint(with: cityAnimals))
 
 // ENUMS ////////////////////////////////////////////////////////////////
 
@@ -329,7 +362,9 @@ error = ( 404, "msg not found")
 print(error, error.0, error.1)
 let (statusCode, statusMessage) = error
 print(statusCode, statusMessage)
+
 // OPTIONALS ///////////////////////////////////////////////////////////
+
 // optionals indicate that a constant or variable is allowed to have “no value”.
 let p = "12345"
 let cp = Int(p)
@@ -374,6 +409,26 @@ let range = ...5
 range.contains(7)   // false
 range.contains(4)   // true
 range.contains(-1)  // true
+// The Swift logical operators && and || are left-associative, meaning that compound expressions with multiple logical operators evaluate the leftmost subexpression first.
+let catCharacters: [Character] = ["C", "a", "t", "!", "🐱"]
+let catString = String(catCharacters)
+print(catString)
+
+let ngreeting = "Guten Tag!"
+print(ngreeting.count)
+print(ngreeting[rgreeting.startIndex])
+print(ngreeting[ngreeting.index(before: ngreeting.endIndex)]
+)
+var welcome = "hello"
+welcome.insert("!", at: welcome.endIndex)
+// welcome now equals "hello!"
+
+
+welcome.insert(contentsOf: " there", at: welcome.index(before: welcome.endIndex))
+print(welcome)
+
+
+
 
 //CLOSURES /////////////////////////////////////////////////////////////
 
