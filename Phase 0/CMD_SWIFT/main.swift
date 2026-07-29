@@ -324,5 +324,56 @@ for filename in filenames {
 
     print("Found picture: \(filename)")
 }
+let error : (Int, String)
+error = ( 404, "msg not found")
+print(error, error.0, error.1)
+let (statusCode, statusMessage) = error
+print(statusCode, statusMessage)
+// OPTIONALS ///////////////////////////////////////////////////////////
+// optionals indicate that a constant or variable is allowed to have “no value”.
+let p = "12345"
+let cp = Int(p)
+print(cp)
+if let a = Int("1234"){
+    print(123)
+}
+else {
+    print("not an int")
+}
+
+let rname: String? = nil
+let rgreeting = "Hello, " + (rname ?? "friend") + "!"
+print(rgreeting)
+
+// force unwrapping
+let possibleNumber = "123"
+let convertedNumber = Int(possibleNumber)
+
+
+let nnumber = convertedNumber!
+
+
+guard let nnumber = convertedNumber else {
+    fatalError("The number was invalid")
+}
+var possiblestuff : Int?
+possiblestuff = Int("3423")
+print(possiblestuff)
+
+let opposites : [String? : String] = [
+    "Mario": "Wario",
+    "Luigi": "Waluigi"
+]
+
+let peachOpposite = opposites["Peach"]
+print(peachOpposite)
+
+print(("blue", 1) < ("purple", -1)    )
+
+let range = ...5
+range.contains(7)   // false
+range.contains(4)   // true
+range.contains(-1)  // true
+
 //CLOSURES /////////////////////////////////////////////////////////////
 
