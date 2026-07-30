@@ -506,6 +506,73 @@ print("Student is a topper: ",topStudentFilter(newStudent))
 
 
 
+print("---------------------STRUCTS------------------------")
+struct newEmployee {
+    let name : String
+    var vacationAllocated : Int
+    var vacationTaken = 0
+//    mutating func calc(){
+//        vacationRemaining = vacationAllocated - vacationTaken
+//    }
+    
+    var vacationRemaining : Int{
+        get{
+            vacationAllocated - vacationTaken
+        }
+        set(newValue) {
+            vacationAllocated = vacationTaken + newValue
+        }
+    }
+}
+var emp2 = newEmployee(name: "Neermita", vacationAllocated: 34)
+print(emp2.vacationRemaining)
+emp2.vacationTaken = 10
+print(emp2.vacationRemaining)
+emp2.vacationRemaining = 5
+print(emp2.vacationRemaining)
+print(emp2.vacationTaken)
+print(emp2.vacationAllocated)
+
+struct App {
+    var contacts = [String]() {
+        willSet {
+            print("Current value is: \(contacts)")
+            print("New value will be: \(newValue)")
+        }
+
+        didSet {
+            print("There are now \(contacts.count) contacts.")
+            print("Old value was \(oldValue)")
+        }
+    }
+}
+
+var app = App()
+app.contacts.append("Adrian E")
+app.contacts.append("Allen W")
+app.contacts.append("Ish S")
+struct Game {
+    var score = 0 {
+        didSet {
+            print("Score is now \(score)")
+        }
+    }
+}
+
+var game = Game()
+game.score += 10
+game.score -= 3
+game.score += 1
+
+struct Player {
+    let name: String
+    let number: Int
+
+    init(name: String, number: Int) {
+        self.name = name
+        self.number = number
+    }
+}
 
 
 
