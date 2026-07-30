@@ -94,6 +94,7 @@ if myAge == 20 || myName == "Foo"{
 }
 
 // FUNCTIONS ///////////////////////////////////////////////////////////
+print("---------------- FUNCTIONS -----------------------")
 func noArgumentsAdNoReturnValue(){
     print("Function idk")
 }
@@ -174,6 +175,7 @@ func convert(_ celsius: Double) -> Double {
 }
 print(convert(100))
 // DATA TYPES /////////////////////////////////////////////////////////////
+print("---------------- DATA TYPES -----------------------")
 var someName="Neermita"
 print(someName.uppercased())
 print(someName.count)
@@ -182,6 +184,7 @@ let num = 10203324325
 print("Is \(num) a mutiple of 3: ",num.isMultiple(of: 3))
 
 // ARRAYS /////////////////////////////////////////////////////////////////
+print("---------------- ARRAYS -----------------------")
 var albums = ["Pop", "Rock"]
 albums.append("Metal")
 
@@ -197,6 +200,7 @@ print(threes)
 
 
 // DICTIONARIES ///////////////////////////////////////////////////////////
+print("---------------- DICTIONARIES -----------------------")
 let employee2 = ["name": "Taylor Swift", "job": "Singer", "location": "Nashville"]
 var namesOfIntegers: [Int: String] = [:]
 print(employee2["name"])
@@ -229,7 +233,7 @@ for airportName in airports.values {
 
 
 // SETS ///////////////////////////////////////////////////////////////////
-
+print("---------------- SETS -----------------------")
 let people = Set(["Denzel Washington", "Tom Cruise", "Nicolas Cage", "Samuel L Jackson"])
 print(people)
 
@@ -252,27 +256,14 @@ print(farmAnimals.isSuperset(of: houseAnimals))
 // true
 print(farmAnimals.isDisjoint(with: cityAnimals))
 
-// ENUMS ////////////////////////////////////////////////////////////////
-
-enum Weekday {
-    case monday
-    case tuesday
-    case wednesday
-    case thursday
-    case friday
-    case saturday
-    case sunday
-}
-var day = Weekday.monday
-print(day)
-
 // TYPE ANNOTATIONS /////////////////////////////////////////////////////
+print("---------------- TYPE ANNOTATIONS -----------------------")
 let surname: String = "Lasso"
 var score: Int = 0
 var isStudent: Bool = true
 var album: [String] = ["Red", "Fearless"]
 var user: [String: String] = ["id": "@twostraws"]
-
+print(user)
 //type inference
 var clues = [String]()
 //type annotation
@@ -283,7 +274,7 @@ enum UIStyle {
 }
 
 var style = UIStyle.light
-
+print(style)
 let username: String
 username = "@nemo"
 
@@ -291,6 +282,7 @@ enum Weather {
     case sun, rain, wind, snow, unknown
 }
 // IF-ELSE & SWITCH CASE //////////////////////////////////////////////////////////
+print("---------------- CONTROL -----------------------")
 func weather(_ weather: Weather){
     
     
@@ -332,7 +324,7 @@ func weather(_ weather: Weather){
 weather(Weather.rain)
 
 // LOOPS ////////////////////////////////////////////////////////////////
-
+print("---------------- LOOPS -----------------------")
 for x in 1...4{
     print(x*2)
 }
@@ -364,7 +356,7 @@ let (statusCode, statusMessage) = error
 print(statusCode, statusMessage)
 
 // OPTIONALS ///////////////////////////////////////////////////////////
-
+print("---------------- OPTIONALS -----------------------")
 // optionals indicate that a constant or variable is allowed to have “no value”.
 let p = "12345"
 let cp = Int(p)
@@ -455,7 +447,7 @@ func op (_ ar : [Int]?) -> Int{
 }
 print("FINAL OPTIONALS PRACTICE: ", op([3,6,3,564,46,326,7,34,547,548]))
 // DEFER ////////////////////////////////////////////////////////////////
-
+print("---------------- DEFER -----------------------")
 var sscore = 1
 if score < 15 {
     defer {
@@ -463,7 +455,71 @@ if score < 15 {
     }
     sscore += 5
 }
+// it prints after the if block is done
+
+
 
 
 //CLOSURES /////////////////////////////////////////////////////////////
+print("---------------- CLOSURES -----------------------")
+// they can be functions with no params and no return values
+//copying a function : var variable = function (this is copy of a function)
+//variable()
+/* not var variable = function()
+ */
 
+let sayHello = {
+    print("Hi there!")
+}
+
+sayHello()
+
+//we could accept params too tho
+let sayHello2 = {(name: String) -> String in
+    "Hi \(name)!"
+    
+    
+}
+print(sayHello2("Nemo")) //no need for external params
+
+//normal function :
+struct Student{
+    var name : String
+    var testScore : Int
+}
+func topStudentFilterF(_ student : Student) -> (Bool) {
+    return student.testScore > 80
+}
+
+var newStudent = Student(name: "Nemo", testScore: 89)
+print("Student is a topper: ",topStudentFilterF(newStudent))
+//closure
+var topStudentFilter : (Student) -> (Bool) = { student in
+    return student.testScore > 80
+}
+var newTopFilter : (Student) -> (Bool) = {
+    $0.testScore > 80
+    
+}
+
+print("Student is a topper: ",topStudentFilter(newStudent))
+
+
+
+
+
+
+
+// ENUMS ////////////////////////////////////////////////////////////////
+
+enum Weekday {
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
+    case sunday
+}
+var day = Weekday.monday
+print(day)
