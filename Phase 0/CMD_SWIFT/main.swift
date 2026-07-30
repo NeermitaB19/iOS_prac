@@ -426,8 +426,43 @@ welcome.insert("!", at: welcome.endIndex)
 
 welcome.insert(contentsOf: " there", at: welcome.index(before: welcome.endIndex))
 print(welcome)
+///////////////////////////////////////unwrap optionals using guard
+func printSquare(of number: Int?) {
+    guard let number = number else {
+        print("Missing input")
+        return
+    }
+
+    print("\(number) x \(number) is \(number * number)")
+}
+
+printSquare(of:nil)
+printSquare(of:89987)
 
 
+struct Book {
+    let title: String
+    let author: String?
+}
+
+var book: Book? = nil
+let author = book?.author?.first?.uppercased() ?? "A"
+print(author)
+
+func op (_ ar : [Int]?) -> Int{
+    let value = ar?.randomElement() ?? Int.random(in: 1...100)
+    return value
+}
+print("FINAL OPTIONALS PRACTICE: ", op([3,6,3,564,46,326,7,34,547,548]))
+// DEFER ////////////////////////////////////////////////////////////////
+
+var sscore = 1
+if score < 15 {
+    defer {
+        print(sscore)
+    }
+    sscore += 5
+}
 
 
 //CLOSURES /////////////////////////////////////////////////////////////
