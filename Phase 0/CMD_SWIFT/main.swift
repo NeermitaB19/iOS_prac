@@ -574,7 +574,35 @@ struct Player {
     }
 }
 
+// GENERICS
+print("---------------------GENERICS------------------------")
 
+func swap<T>(a : inout T, b : inout T){
+    var temp = a
+    a = b
+    b = temp
+}
+var a = 23893
+var b = 8923
+swap(a: &a, b: &b)
+print(a,b)
+
+struct Stack{
+    var items : [Int]
+    mutating func push(item : Int){
+        items.append(item)
+    }
+    mutating func pop() -> Int{
+        items.removeLast()
+    }
+}
+var items = [3,6,3,76,345,46,7,234]
+var st = Stack(items: items)
+st.push(item: 132)
+print(st.items)
+print(st.pop())
+print(st.pop())
+print(st.items)
 
 
 // ENUMS ////////////////////////////////////////////////////////////////
@@ -590,3 +618,31 @@ enum Weekday {
 }
 var day = Weekday.monday
 print(day)
+
+enum CompassPoint : CaseIterable{
+    case north
+    case south
+    case east
+    case west
+    case idk
+}
+func whereAmI(dir : CompassPoint) -> (Void){
+    switch dir{
+    case CompassPoint.north:
+        print("You're facing north")
+    case CompassPoint.south:
+        print("You're facing south")
+    case CompassPoint.east:
+        print("You're facing east")
+    case CompassPoint.west:
+            print("You're facing west")
+    default:
+        print("Idk where you are")
+    }
+}
+
+whereAmI(dir : CompassPoint.east)
+whereAmI(dir : CompassPoint.idk)
+for x in CompassPoint.allCases{
+    print(x)
+}
