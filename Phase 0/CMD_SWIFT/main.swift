@@ -587,17 +587,17 @@ var b = 8923
 swap(a: &a, b: &b)
 print(a,b)
 
-struct Stack{
-    var items : [Int]
-    mutating func push(item : Int){
+struct Stack<T>{
+    var items : [T]
+    mutating func push(item : T){
         items.append(item)
     }
-    mutating func pop() -> Int{
+    mutating func pop() -> T{
         items.removeLast()
     }
 }
 var items = [3,6,3,76,345,46,7,234]
-var st = Stack(items: items)
+var st = Stack<Int>(items: items)
 st.push(item: 132)
 print(st.items)
 print(st.pop())
@@ -606,6 +606,7 @@ print(st.items)
 
 
 // ENUMS ////////////////////////////////////////////////////////////////
+print("---------------------ENUMS------------------------")
 
 enum Weekday {
     case monday
@@ -619,7 +620,7 @@ enum Weekday {
 var day = Weekday.monday
 print(day)
 
-enum CompassPoint : CaseIterable{
+enum CompassPoint : String {
     case north
     case south
     case east
@@ -643,6 +644,59 @@ func whereAmI(dir : CompassPoint) -> (Void){
 
 whereAmI(dir : CompassPoint.east)
 whereAmI(dir : CompassPoint.idk)
-for x in CompassPoint.allCases{
-    print(x)
+//for x in CompassPoint.allCases{
+//    print(x)
+//}
+
+enum ACIIControlCharacter : Character{
+    case tab = "\t"
+    case newline = "\n"
 }
+
+print(CompassPoint.west.rawValue)
+
+indirect enum ArithmeticExpression {
+    case number(Int)
+    case addition(ArithmeticExpression, ArithmeticExpression)
+    case multiplication(ArithmeticExpression, ArithmeticExpression)
+}
+
+let five = ArithmeticExpression.number(5)
+
+let four = ArithmeticExpression.number(4)
+
+let sum = ArithmeticExpression.addition(five, four)
+
+let product = ArithmeticExpression.multiplication(
+    sum,
+    ArithmeticExpression.number(2)
+)
+
+
+print("---------------------CLASSES------------------------")
+struct Resolution {
+    var width = 0
+    var height = 0
+}
+class VideoMode {
+    var resolution = Resolution()
+    var interlaced = false
+    var frameRate = 0.0
+    var name: String?
+}
+
+var vm = VideoMode()
+let hd = Resolution(width: 1920, height: 1080)
+var cinema = hd
+cinema.width = 2048
+print(hd.width)
+vm.frameRate = 60
+print(vm.frameRate)
+var newvm = vm
+newvm.frameRate = 30
+print(newvm.frameRate)
+print(vm.frameRate)
+
+
+
+
