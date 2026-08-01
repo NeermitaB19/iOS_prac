@@ -700,3 +700,31 @@ print(vm.frameRate)
 
 
 
+print("---------------------PROTOCOLS------------------------")
+protocol SomeProtocol {
+    var fullName : String {get}
+}
+
+struct Person2 : SomeProtocol{
+    var fullName : String
+}
+var p2 = Person2(fullName: "")
+p2.fullName = "Nemo"
+print(p2.fullName)
+var p3 : SomeProtocol = p2
+print(p3.fullName)
+//p3.fullName = "Dory" // wont work
+
+protocol Animal {
+    var name : String {get}
+    func speak()->()
+}
+
+struct Dog : Animal {
+    var name : String
+    func speak (){
+        print("woof, woof, I'm Tinka")
+    }
+}
+var d1 = Dog(name: "Tinka")
+d1.speak()
