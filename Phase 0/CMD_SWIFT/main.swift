@@ -728,3 +728,131 @@ struct Dog : Animal {
 }
 var d1 = Dog(name: "Tinka")
 d1.speak()
+
+protocol Equatable {
+    static func == (lhs : Self, rhs : Self) -> Bool
+}
+
+// generics dont erase the type but preserve it
+// some can be used only with protocols
+func identity<T>(value : T)-> (T){
+    return value
+}
+
+func makeAnimal() -> (some Animal){
+    d1 = Dog(name: "Tinkerbell")
+    print(d1)
+    return d1
+}
+makeAnimal()
+
+print("---------------------COMPUTED PROPS------------------------")
+struct Rectangle {
+    var w : Int = 10
+    var h : Int = 20
+    var area : Int  {w*h} // no = as not a stored value
+}
+var rec = Rectangle()
+rec.w = 49
+rec.h = 98
+print("Area: ",rec.area)
+print("---------------------EXTENSIONS------------------------")
+// add new functionality to an existing class, struct, enum, protocol
+
+extension Animal {
+    func introduce() {
+        print ("Hi! I'm \(name)")
+    }
+}
+extension Double {
+    var km: Double { return self * 1_000.0 }
+    var m: Double { return self }
+    var cm: Double { return self / 100.0 }
+    var mm: Double { return self / 1_000.0 }
+    var ft: Double { return self / 3.28084 }
+}
+let oneInch = 25.4.mm
+print("One inch is \(oneInch) meters")
+//double value of 1 is one meter
+
+extension String {
+    func trimmed() -> String{
+        self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+extension Collection {
+    var isNotEmpty: Bool {
+        isEmpty == false
+    }
+}
+var ar = ["a", "b", "c"]
+print(ar.isNotEmpty)
+
+extension Numeric {
+    func squared()-> Self {
+        self * self
+    }
+}
+print("---------------------PROPERTY OBSERVERS------------------------")
+// use only on stored properties
+// willset runs before value is stored
+// didset runs after value is stored
+
+var name2: String = "Unknown" {
+    willSet{
+        print("\(name2) will change to \(newValue)")
+    }
+    didSet{
+        name2 = name2.capitalized
+        print("Name changed from \(oldValue) to \(name2)")
+      
+    }
+}
+name2 = "jjohn"
+print("name: ", name2)
+
+//didset can be used for validation
+
+print("---------------------RESULT------------------------")
+enum Result<Success, Failure: Error> {
+    case success(Success)
+    case failure(Failure)
+}
+enum Errors: Error {
+    case divideByZero
+}
+func divide(a:Int, b:Int) -> Result<Int, Error>{
+    if b==0{
+        return Result.failure(Errors.divideByZero)
+    }
+    else{
+        return Result.success(a/b)
+    }
+}
+
+print(divide(a:10,b:0))
+print(divide(a:10,b:3))
+
+enum NetworkError : Error{
+    case badURL
+    case noData
+    case invalidResponse
+}
+func fetchStuff(from urlString: String, completionHandler: @escaping (Result<Int, NetworkError>) -> (Void)){
+    guard let url = URL(string: urlString) else{
+        completionHandler(Result.failure(NetworkError.badURL))
+        return
+        
+    }
+    completionHandler(.success(5))
+
+}
+fetchStuff(from: "", completionHandler: {result in
+    switch result {
+    case Result.success(let count):
+        print("\(count) unread msg")
+    case Result.failure(let error):
+        print(error)
+    }
+    
+})
