@@ -856,3 +856,19 @@ fetchStuff(from: "", completionHandler: {result in
     }
     
 })
+print("---------------------INITIALIZERS-----------------------")
+
+class User {
+    var name: String
+    init(name: String) {
+        self.name = name
+    }
+    
+    convenience init() {
+        self.init(name: "Kevin")
+    }
+}
+let john = User(name: "John")
+print(john.name)
+let kevin = User()
+print(kevin.name)
