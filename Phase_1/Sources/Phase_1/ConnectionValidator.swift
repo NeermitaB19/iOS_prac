@@ -7,29 +7,30 @@
 
 //model
 
-func validTransition(from current : ConnectionState, to next : ConnectionState) -> Bool {
+func validTransition(from current : ConnectionState, to next : ConnectionState) throws -> () {
     switch (current, next){
         case (.disconnected, .discovering):
-            return true
+            return
         case (.discovering, .connecting(_)):
-            return true
+            return
         case (.connecting(_), .connected(_)):
-            return true
+            return
         case (.connecting(_), .failed(_)):
-            return true
+            return
         case (.connecting(_), .disconnected):
-            return true
+            return
         case (.reconnecting, .disconnected):
-            return true
+            return
         case (.reconnecting, .connected(_)):
-            return true
+            return
         case (.connected(_), .disconnected):
-            return true
+            return
         case (.connected(_), .reconnecting):
-            return true
+            return
         case (.failed(_), .discovering):
-            return true
+            return
         default :
-            return false
+        throw  TransitionError.illegalTransition
+            
     }
 }

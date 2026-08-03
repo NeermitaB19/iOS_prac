@@ -23,13 +23,16 @@ enum NetworkError : Error {
     case invalidResponse
     case authenticationFailed
 }
+enum TransitionError: Error {
+    case illegalTransition
+}
 
 enum ConnectionState {
     case disconnected
     case discovering
     case connecting (CastDevice) //associated values
     case connected (CastDevice)
-    case reconnecting
+    case reconnecting(CastDevice)
     case failed (NetworkError)
 }
 
