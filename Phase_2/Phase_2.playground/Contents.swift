@@ -349,5 +349,25 @@ func pingGoogle2() async {
 
 
 // MARK: COMBINE FRAMEWORK
+// Publisher : emits values over time
+// Operators : operates over data
+// Subscriber : requests data and does final updates
+
+//anycancellable : subscriptions stay alive
+
+// subjects : special type of publisher which lets u manually inject data into the stream by calling .send(value)
+
+//PassthroughSubject : It passes values through, but doesn't remember them - errors, buy button, notification
+import Combine
+let doorbell = PassthroughSubject<String, Never>()
+doorbell.send("ding dong")
+let subscription = doorbell.sink { print($0) }
+
+doorbell.send("ding dong again")
 
 
+//CurrentValueSubject : Remembers the most recent value - is user logged in, current device name
+
+let light = CurrentValueSubject<String, Never>("OFF")
+light.send("ON")
+let subs = light.sink{value in print("light is \(value)")}
