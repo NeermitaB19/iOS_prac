@@ -127,7 +127,7 @@ func runDispatchGroupExample() {
     }
     
     // Simulate Request 2: Video Stream
-    group.enter() /
+    group.enter()
     print("Starting Video Stream download...")
     DispatchQueue.global().async {
         Thread.sleep(forTimeInterval: 3.0) // Takes 3 seconds
@@ -152,3 +152,9 @@ func runDispatchGroupExample() {
         PlaygroundPage.current.finishExecution()
     }
 }
+
+
+// MARK: DEADLOCK
+//DispatchQueue.main.sync {
+//    print("This blocks the main thread from executing this very block.")
+//}
