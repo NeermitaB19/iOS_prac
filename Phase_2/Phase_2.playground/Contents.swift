@@ -88,7 +88,7 @@ import PlaygroundSupport
 
 PlaygroundPage.current.needsIndefiniteExecution = true
 
-// MARK: - 1. DispatchQueue Example
+// MARK: - 1. DispatchQueue
 print("--- Starting DispatchQueue Example ---")
 print("1. UI is loading...")
 
@@ -111,44 +111,44 @@ DispatchQueue.global(qos: .userInitiated).async {
     }
 }
 
-// MARK: - 2. DispatchGroup Example
+// MARK: - 2. DispatchGroup
 func runDispatchGroupExample() {
     print("--- Starting DispatchGroup Example ---")
     
     let group = DispatchGroup()
     
     // Simulate Request 1: Subtitles
-    group.enter() // Tell group we are starting
+    group.enter()
     print("Starting Subtitles download...")
     DispatchQueue.global().async {
         Thread.sleep(forTimeInterval: 1.5) // Takes 1.5 seconds
         print("Subtitles finished")
-        group.leave() // Tell group we are done
+        group.leave()
     }
     
     // Simulate Request 2: Video Stream
-    group.enter() // Tell group we are starting
+    group.enter() /
     print("Starting Video Stream download...")
     DispatchQueue.global().async {
         Thread.sleep(forTimeInterval: 3.0) // Takes 3 seconds
         print("Video Stream finished!")
-        group.leave() // Tell group we are done
+        group.leave()
     }
     
     // Simulate Request 3: Audio Track
-    group.enter() // Tell group we are starting
+    group.enter()
     print("Starting Audio Track download...")
     DispatchQueue.global().async {
         Thread.sleep(forTimeInterval: 1.0) // Takes 1 second
         print(" Audio Track finished!")
-        group.leave() // Tell group we are done
+        group.leave()
     }
     
     // This will only trigger when ALL 3 group.leave() calls have been made
     group.notify(queue: .main) {
         print("\nThe movie is ready to play.")
         
-        // Optional: End the playground execution cleanly
+        
         PlaygroundPage.current.finishExecution()
     }
 }
