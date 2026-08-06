@@ -158,3 +158,121 @@ func runDispatchGroupExample() {
 //DispatchQueue.main.sync {
 //    print("This blocks the main thread from executing this very block.")
 //}
+
+//MARK: ASYNC LET and TASKGROUP
+
+//async let when u know number of tasks
+func fetchDescription(_ url : URL) async throws -> String {
+    try await Task.sleep(nanoseconds:(3000000000))
+    return "This is an asynchronous description."
+}
+func fetchPoster() async throws -> Data {
+    try await Task.sleep(nanoseconds: (2000000000))
+    return Data(count: 100_000)
+}
+
+func fetchMoviePage() async throws -> (String, Data){
+    let url : URL = URL(string: "https://www.google.com")!
+    async let descp = fetchDescription(url)
+    async let poster = fetchPoster()
+    
+    return try await (descp, poster)
+}
+
+
+Task {
+    do {
+        let page = try await fetchMoviePage()
+        print(page)
+    } catch {
+        print(error)
+    }
+}
+
+// taskgroup when unknown quantity of tasks
+func downloadAllDesc(urls : [URL]) async throws -> [String] {
+    return try await withThrowingTaskGroup(of: String.self) { group in
+        for url in urls {
+            
+            // adds a concurrent task to the group for every url
+            
+            group.addTask{
+                return try await fetchDescription(url)
+            }
+        }
+        var descriptions : [String] = []
+        for try await desc in group {
+            descriptions.append(desc)
+        }
+        return descriptions
+    }
+}
+Task {
+    do {
+        var desc = try await downloadAllDesc(urls: [URL(string: "https://www.google.com")!])
+        
+        print("This is in TaskGroup function: ", desc)
+    }
+    catch {
+        print(error)
+    }
+}
+
+
+// MARK: Task detached
+@MainActor
+func test() {
+    print("I'm on the Main Actor")
+}
+
+test()
+
+Task.detached {
+
+    print("Detached task")
+
+    await MainActor.run {
+        print("Now I'm on the Main Actor")
+    }
+}
+
+class Thing {
+    init()
+    {
+        
+    }
+    func printAsync(_ string : String) async {
+        print(string)
+    }
+    
+    func go () async {
+        await self.printAsync("Thing 1 ")
+        Task.detached(priority: .background){
+            await self.printAsync("Thing 2 ")
+        }
+        await self.printAsync("Thing 3 ")
+    }
+}
+let thing = Thing()
+Task{
+    await thing.go()
+}
+// MARK: Actors
+// they are reference types, and has a built in lock
+// to avoid race conditions, priority inversions, deadlocks
+
+actor BankAccount {
+
+    var balance = 1000
+
+    func withdraw(_ amount: Int) {
+        balance -= amount
+    }
+}
+Task {
+    let account = BankAccount()
+    await account.withdraw(100)
+    await print(account.balance)
+    await account.withdraw(200)
+    await print(account.balance)
+}
