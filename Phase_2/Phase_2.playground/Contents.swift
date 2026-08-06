@@ -276,3 +276,73 @@ Task {
     await account.withdraw(200)
     await print(account.balance)
 }
+
+// MARK: CONTINUATION/PROMISES
+
+// Legacy function from an old 3rd party SDK
+func connectToChromecast(ip: String, completion: @escaping (Bool, Error?) -> Void) {
+    completion(true,nil)
+    print("connected")
+}
+
+// Modern Wrapper
+func modernConnect(ip: String) async throws -> Bool{
+    return try await withCheckedThrowingContinuation { continuation in
+        connectToChromecast(ip: ip){
+            success, error in
+            if let error = error {
+                continuation.resume(throwing : error)
+            }    else{
+                continuation.resume(returning: success)
+            }    }
+    }
+}
+
+// MARK: URLSession
+//    .default: Uses the disk to cache data and stores cookies normally.
+//
+//    .ephemeral: "Incognito mode." No caches, no cookies, leaves no trace (often used for secure authentication).
+//
+//    .background: Continues downloading even if the user minimizes the app.
+
+//LEGACY
+func pingGoogle(){
+    guard let url  = URL(string : "https://www.google.com") else{
+        print("bad url")
+        return
+    }
+    var req = URLRequest(url: url)
+    req.setValue("Bearer 12345", forHTTPHeaderField: "Authorization")
+    let defaultSession = URLSession(configuration: .default)
+    defaultSession.dataTask(with: req) { data, response, error in
+        guard let data = data else{
+            print(error)
+            return
+        }
+        print(data)
+        print(response)
+    }.resume()
+    
+}
+pingGoogle()
+
+//MODERN WAY
+func pingGoogle2() async {
+    guard let url = URL(string : "https://www.google.com") else{
+        print("bad url")
+        return
+    }
+    let req = URLRequest(url: url)
+    let defaultSession = URLSession(configuration: .default)
+    
+    do {
+        
+        let (data, response ) = try await defaultSession.data(for:req)
+        
+        print(data)
+        print(response)
+    }
+    catch {
+        print(error)
+    }
+}
