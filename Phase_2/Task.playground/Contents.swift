@@ -55,7 +55,7 @@ class Consumer{
         print("Consumer starts listening..")
         engine.devicesPublisher.debounce(for: .seconds(0.5), scheduler : DispatchQueue.main)
             .sink{[weak self] devices in
-                guard let self = self else {return}
+                guard let self else {return}
                 print("-------------------------Found \(devices.count) devices-------------------------")
                 for device in devices {
                     print("Device: \(device.name), Device ID:  \(device.id)")

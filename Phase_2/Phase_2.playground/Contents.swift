@@ -36,7 +36,11 @@ Task{
     }
 }
 
-
+Task {
+    DispatchQueue.global().sync{
+        print("in main queue")
+    }
+}
 // MARK: ARC and Memory Leaks
 class StreamingPlayer {
     var title = "HBO Stream"
@@ -230,7 +234,6 @@ test()
 Task.detached {
 
     print("Detached task")
-
     await MainActor.run {
         print("Now I'm on the Main Actor")
     }
@@ -258,9 +261,10 @@ Task{
     await thing.go()
 }
 // MARK: Actors
-// they are reference types, and has a built in lock
+// they are reference types, and have a built in lock
 // to avoid race conditions, priority inversions, deadlocks
 
+//before used to use completion handlers and locks
 actor BankAccount {
 
     var balance = 1000
@@ -364,10 +368,25 @@ doorbell.send("ding dong")
 let subscription = doorbell.sink { print($0) }
 
 doorbell.send("ding dong again")
-
+// event - loading
 
 //CurrentValueSubject : Remembers the most recent value - is user logged in, current device name
 
 let light = CurrentValueSubject<String, Never>("OFF")
 light.send("ON")
 let subs = light.sink{value in print("light is \(value)")}
+    // pass data (default)
+
+
+// MARK: MAP and FILTER
+let numbers = [1,2,3, 4,5,6,7,8,9,10]
+let doubled = numbers.map{
+    number in
+    return number*2
+}
+
+let evens = numbers.filter{num in num%2==0}
+print(evens)
+
+//higher order functions
+//compact map, sorting, reduce, for each
