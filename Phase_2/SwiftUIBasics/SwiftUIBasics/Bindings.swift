@@ -11,7 +11,7 @@ import SwiftUI
 
 
 struct Bindings: View {
-    @State private var name = "..."
+    @State private var name = ""
     let students = ["Harry", "Ron", "Hermione"]
     @State private var selectedStudent = "Harry"
     var body: some View {
@@ -25,19 +25,16 @@ struct Bindings: View {
                     Text("Row \(1+number)")
                 }
             }
-            NavigationStack{
+          
                 Form{
                     Picker("Select your student", selection: $selectedStudent){
                         ForEach(students, id: \.self) {
                             Text($0)
-                            
-                        }
+                                    
                         
                     }}
-                        
-                        
-                        
                     }
+            Text("Selected student: \(selectedStudent)")
             
             TabView{
                 Text("Home").tabItem{

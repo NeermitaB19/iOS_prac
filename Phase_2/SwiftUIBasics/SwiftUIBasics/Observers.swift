@@ -26,6 +26,7 @@ struct Observers: View {
 }
 class UserProfile : ObservableObject{
     @Published var name : String = "Neermita"
+    //used with the mvvm pattern to represent the viewmodel layer. use when u have data that needs to be shared across multiple views or needs to persist beyond the lifetime of a single view.
 }
 struct Child : View{
     @Binding var count: Int
@@ -40,7 +41,8 @@ struct Child : View{
 }
 
 struct ProfileView : View {
-    @State private var count : Int = 0
+    @State  var count : Int = 0
+    //use for managing simple, view-specific state that doesn't need to be shared with other views or persisted.
     @StateObject var profile = UserProfile()
 
     var body : some View{

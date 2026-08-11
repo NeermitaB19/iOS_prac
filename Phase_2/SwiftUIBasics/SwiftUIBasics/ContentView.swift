@@ -30,7 +30,7 @@ struct ChildView : View {
 }
 // child takes a binding to parentValue, allowing it to both read and modify the value
 struct ParentView: View {
-    @State private var parentValue : Int = 0
+    @State var parentValue : Int = 0
     
     var body : some View{
         VStack{
@@ -40,7 +40,25 @@ struct ParentView: View {
     }
 }
 
+struct GrandparentView: View {
+    // A completely unrelated button to change the background color
+    @State private var colorToggle = false
+    
+    var body: some View {
+        VStack {
+            Button("Change Background") {
+                colorToggle.toggle()
+            }
+            
+         
+            // Because you didn't use 'private', Swift allows Grandparent
+            // to forcefully inject '10' into the ParentView's state.
+            ParentView(parentValue: 10)
+        }
+        .background(colorToggle ? Color.red : Color.green)
+    }
+}
 
 #Preview {
-    ParentView()
+GrandparentView()
 }
