@@ -15,10 +15,10 @@ enum CastDeviceType : String {
 struct CastDevice : Identifiable, Equatable{
     let id : String
     let name : String
-    var type : CastDeviceType
+    var type : CastDeviceType = .tv
 }
 
-
+// equatble works by default for enums and structs; for classes manually implement
 enum NetworkError : Error, Equatable {
     case connectionFailed
     case invalidResponse
@@ -39,8 +39,8 @@ enum ConnectionState : Equatable{
 }
 
 extension ConnectionState {
-    func validateTransition(to : ConnectionState) throws {
-        switch (self, to) {
+    func validateTransition(to next : ConnectionState) throws {
+        switch (self, next) {
         case (.disconnected, .discovering): return
         case (.discovering, .connecting(_)): return
         case (.connecting(_), .connected(_)): return
