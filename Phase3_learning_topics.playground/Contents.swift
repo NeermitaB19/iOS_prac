@@ -72,3 +72,67 @@ do {
 } catch {
     print("Error:", error)
 }
+
+// EnumHandling.swift
+// Enums with raw values automatically conform to Codable.
+// The raw value is used for encoding and decoding.
+import Foundation
+
+enum Priority: String, Codable {
+    case low
+    case medium
+    case high
+    case critical
+}
+
+enum Status: Int, Codable {
+    case pending = 0
+    case inProgress = 1
+    case completed = 2
+    case cancelled = 3
+}
+
+struct Issue: Codable {
+    let id: Int
+    let title: String
+    let priority: Priority
+    let status: Status
+}
+
+let jsonString3 = """
+{
+    "id": 42,
+    "title": "Fix login bug",
+    "priority": "high",
+    "status": 1
+}
+"""
+
+let jsonData3 = jsonString3.data(using: .utf8)!
+let issue = try JSONDecoder().decode(Issue.self, from: jsonData3)
+
+print("Issue: \(issue.title)")
+print("Priority: \(issue.priority)")    // Output: high
+print("Status: \(issue.status)")        // Output: inProgress
+
+
+// MARK: higher order functions
+
+//compactMap
+
+let userInputs = ["10", "hello", "20", "apple"]
+// Int($0) tries to turn the string into an integer.
+// "hello" fails and becomes nil. compactMap deletes it.
+let validNumbers = userInputs.compactMap { Int($0) }
+print(validNumbers)
+
+//reduce
+let prices = [231,546,234,123,789]
+var t = prices.reduce(0){n,m in n+m}
+
+print(t)
+
+//foreach
+let names = ["Neermita", "John", "Sarah"]
+names.forEach { print("Hello, \($0)!") }
+
