@@ -29,6 +29,7 @@ func guards(){
     print(cnn)
 }
 guards()
+let cnnn = convertedNumber ?? 1
 
 // MARK:  question 4
 let ngreeting = "Guten Tag!"
