@@ -1,7 +1,7 @@
 import Cocoa
 
 var greeting = "Hello, playground"
-
+import Combine
 
 
 //MARK: question 1 :
@@ -48,6 +48,7 @@ enum NetworkError: Error {
     case noInternetConnection
     case timedOut
     case invalidResponse
+    case illegalTransition
     
 }
 enum CastDevice {
@@ -55,20 +56,21 @@ enum CastDevice {
     case projector
 }
 enum ConnectionState {
-case disconnected
-case connecting(CastDevice)
-case connected(CastDevice)
-case failed(NetworkError)
+    case disconnected
+    case discovering
+    case connecting(CastDevice)
+    case connected(CastDevice)
+    case reconnecting
+    case failed(NetworkError)
 }
+
 func extract(cn: ConnectionState)->(CastDevice?){
-    if case ConnectionState.connecting(let device) = cn{
-        return device
+    if case let ConnectionState.connecting(d) = cn{
+        return d
     }
     else{
         return nil
     }
-        
-    
 }
 
 //MARK: question 6
@@ -317,3 +319,217 @@ func performDivisions() async {
     }
 }
 
+//MARK: Question 14
+
+class ConnectionManager{
+    var state : ConnectionState = ConnectionState.disconnected
+    func connect(to device : CastDevice) async throws {
+        
+        
+        guard validTransition(from: state, to: .discovering)else{
+            throw NetworkError.illegalTransition
+        }
+        state = ConnectionState.discovering
+        print("Discovering")
+        try await Task.sleep(for: .seconds(5))
+        guard validTransition(from: state, to: .connecting(.tv)) else{
+            throw NetworkError.illegalTransition
+        }
+        state = .connecting(.tv)
+        print("Connecting")
+        try await Task.sleep(for: .seconds(5))
+        
+        guard validTransition(from: state, to: .connected(.tv)) else{
+            throw NetworkError.illegalTransition
+        }
+        state = .connected(.tv)
+        print("Connected!!!")
+        
+        
+    }
+    
+}
+
+var CM = ConnectionManager()
+Task {
+    do {
+        try await CM.connect(to: CastDevice.projector)
+    } catch {
+        print("Connection failed:", error)
+    }
+}
+
+//MARK: Question 18
+let group = DispatchGroup()
+group.enter()
+DispatchQueue.global().async {
+Thread.sleep(forTimeInterval: 1.5)
+print("Subtitles finished")
+group.leave()
+
+}
+group.enter()
+DispatchQueue.global().async {
+    Thread.sleep(forTimeInterval: 5.5)
+    print("Video finished")
+    group.leave()
+}
+group.enter()
+DispatchQueue.global().async {
+    Thread.sleep(forTimeInterval: 3.0)
+    print("Audio finished")
+    group.leave()
+}
+group.notify(queue: .main) {
+print("All tasks complete")
+}
+
+//MARK: question 20
+func fetchDescription(_ url: URL?) async throws -> String {
+    if let url = url{
+        return url.absoluteString
+    }
+    else{
+        throw URLError(.badURL)
+    }
+    
+}
+func downloadAllDesc(urls: [URL]) async throws -> [String] {
+        return try await withThrowingTaskGroup(of: String.self) { group in
+        for url in urls {
+        group.addTask {
+            do
+                {
+                    return try await fetchDescription(url)
+                }
+            catch
+                {
+                    return "failed : \(error)"
+                }
+            }
+        }
+        var descriptions: [String] = []
+        for try await desc in group {
+                descriptions.append(desc)
+            }
+        return descriptions
+            }
+        }
+
+
+//MARK: question 22
+
+func fetchData()->(Int){
+    return 45
+}
+@MainActor
+func updateUI(){
+    print("I'm on main actor rn")
+}
+Task.detached{
+    var im = fetchData()
+    print("collected \(im) images")
+    await MainActor.run{
+        print("back to UI")
+    }
+}
+
+updateUI()
+
+//MARK: question 24
+func pingGoogle () async throws -> (Data)
+    {
+        guard let url = URL(string: "https://www.google.com") else
+        {
+            throw URLError(.badURL)
+            
+        }
+        var req = URLRequest(url: url)
+        req.setValue("Bearer 12345", forHTTPHeaderField: "Authorization")
+            
+        let (data, response) = try await URLSession.shared.data(for: req)
+            
+        return data
+    }
+
+Task {
+    do
+        {
+          let url = try await pingGoogle()
+            print("this worked !! Data: ",url)
+            
+        }
+
+    catch
+        {
+         print(error)
+        }
+
+}
+
+//MARK: question 25
+// no throwing:
+
+func connectToChromecast(ip: String, completion: @escaping (Bool) -> Void) {
+    
+}
+func newConnect(ip: String) async -> Bool {
+    return try await withCheckedContinuation { continuation in
+        connectToChromecast(ip: ip) { success in
+            
+    continuation.resume(returning: success)
+            
+        }
+    }
+}
+// with result
+//func connect(completion: @escaping (Result<Bool, Error>) -> Void) {
+//    
+//}
+//func resultConnect() async -> Result<Bool, Error> {
+//    return await withCheckedContinuation { continuation in
+//        
+//        connect() { result in
+//            continuation.resume(returning: result)
+//        }
+//    }
+//}
+//let result = await resultConnect()
+//switch result{
+//case .success:
+//    print("connected")
+//case .failure:
+//    print("error")
+//}
+
+//MARK: question 27
+
+//Passthrpughsubject doesnt remember last value. it will get value only once its subscribed - use for one time events like otp, or button taps
+//Currentvaluesubject remembers latest values and has initial value - use to remember state
+
+//MARK: question 28
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+var publisher = CurrentValueSubject<Int, Never>(0)
+let subs = publisher.filter{number in number % 2==0
+
+}.map{
+    number in
+        number*2
+}.filter{
+    value in
+        value > 10
+}.sink{
+    value in
+        print("received: ", value)
+}
+
+for n in numbers{
+    publisher.send(n)
+}
+
+// MARK: question 29
+//  StreamingPLayer -> onPlay (self) -> StreamingPLayer -> onPlay
+//StreamingPLayer strongly owns closure whihc strongly captures self (StreamingPlayer)
+// weak self tells to capture self but not strongly
+// StreamingPlayer -> strong -> onPlay -> weak -> StreamingPlayer
