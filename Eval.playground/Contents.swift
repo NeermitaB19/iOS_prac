@@ -534,3 +534,5 @@ for n in numbers{
 //StreamingPLayer strongly owns closure whihc strongly captures self (StreamingPlayer)
 // weak self tells to capture self but not strongly
 // StreamingPlayer -> strong -> onPlay -> weak -> StreamingPlayer
+
+// haven't gone through unowned self
