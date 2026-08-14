@@ -42,12 +42,14 @@ one class handles user related operations, one handles view updates
 /* open closed principle
  The OCP states that software entities should be open for extension but closed for modification. This principle encourages the use of abstraction and polymorphism, allowing new functionality to be added without modifying existing code.
  use protocols (area func for diff shapes)
+ 
  */
 
 /*
  Liskov Substitution Principle (LSP):
  The LSP states that objects of a superclass should be replaceable with objects of its subclasses without affecting the correctness of the program. In other words, the subclasses should be able to substitute their parent classes without causing unexpected behavior.
- overrode func x()
+ override func x()
+ 
  
  */
 
@@ -72,6 +74,7 @@ let datamanager class depend on a protocol instead of actual databases
 
  class DataManager {
       let database: Database
+
 
       init(database: Database) {
            self.database = database

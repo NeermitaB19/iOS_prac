@@ -123,6 +123,9 @@ func findLargest<T: Comparable>(arr : [T])->(T){
     return arr[arr.endIndex - 1] as! T
 }
 print(findLargest(arr: [4,6,3,6,24,7,243]))
+var st = Stack(items: [4,5,2])
+st.push(item: 67)
+print("largest value in stack: ",findLargest(arr: st.items))
 
 //MARK: question 9
 // reconnecting needs a value (which device to connect to)

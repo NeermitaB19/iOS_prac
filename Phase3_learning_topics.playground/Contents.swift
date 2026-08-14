@@ -63,6 +63,8 @@ struct User2: Codable {
         }
     }
 }
+
+
 let jsonData2 = jsonString.data(using: .utf8)!
 do {
     let decoder = JSONDecoder()
@@ -120,10 +122,10 @@ print("Status: \(issue.status)")        // Output: inProgress
 
 //compactMap
 
-let userInputs = ["10", "hello", "20", "apple"]
+let userInputs = ["10", "hello", "20", "apple", nil]
 // Int($0) tries to turn the string into an integer.
 // "hello" fails and becomes nil. compactMap deletes it.
-let validNumbers = userInputs.compactMap { Int($0) }
+let validNumbers = userInputs.map { ($0)}
 print(validNumbers)
 
 //reduce
@@ -136,3 +138,53 @@ print(t)
 let names = ["Neermita", "John", "Sarah"]
 names.forEach { print("Hello, \($0)!") }
 
+
+// --------------------------------------- filter and sort
+
+
+
+// Design pattern - reusable solution to a common software deisgning problem
+/*
+ Design Patterns
+ │
+ ├── Creational
+ │     → How objects are created
+ │
+ ├── Structural
+ │     → How objects/classes are combined
+ │
+ └── Behavioral
+       → How objects communicate/behave
+
+ */
+/*
+ 
+ Factory
+ Problem
+ You need to create different objects, but you don't want the caller to know the exact concrete class.
+ */
+
+/*
+ Builder
+ Problem
+ An object has lots of configuration.
+
+ Imagine:
+
+ User(
+     name: "John",
+     age: 25,
+     email: "...",
+     address: "...",
+     phone: "...",
+     image: "...",
+     ...
+ )
+ 
+ use builder let user = UserBuilder()
+ .setName("John")
+ .setAge(25)
+ .setEmail("john@email.com")
+ .build()
+
+ */
