@@ -539,3 +539,27 @@ for n in numbers{
 // StreamingPlayer -> strong -> onPlay -> weak -> StreamingPlayer
 
 // haven't gone through unowned self
+
+
+// MARK: QUESTION 30
+
+
+//enum NetworkError: Error {
+//    case noInternetConnection
+//    case timedOut
+//    case invalidResponse
+//    case illegalTransition
+//    
+//}
+//enum CastDevice {
+//    case tv
+//    case projector
+//}
+//enum ConnectionState {
+//    case disconnected
+//    case discovering
+//    case connecting(CastDevice)
+//    case connected(CastDevice)
+//    case reconnecting
+//    case failed(NetworkError)
+//}
