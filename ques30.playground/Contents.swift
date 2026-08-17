@@ -116,7 +116,6 @@ class DeviceManager{
 }
 //dont want other codes to do dm.statesub.send()
 
-
 let done = DispatchSemaphore(value: 0)
 var manager = DeviceManager()
 
