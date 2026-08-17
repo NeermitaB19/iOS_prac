@@ -20,6 +20,12 @@ enum ConnectionState: Equatable {
     case reconnecting(CastDevice)
     case failed(NetworkError)
 }
+enum ConnectionEvent: Equatable {
+    case started(CastDevice)
+    case progress(CastDevice, Double)
+    case completed(CastDevice)
+    case failed(CastDevice, NetworkError)
+}
 enum CastDeviceType{
     case tv
     case projector
@@ -60,26 +66,68 @@ func canTransition(from: ConnectionState, to: ConnectionState) -> Bool {
     return validTransition(from: from, to: to)
 }
 
+class ConnectionEngine {
+    private let eventSubject = PassthroughSubject<ConnectionEvent, Never>()
+    var eventPublisher: AnyPublisher<ConnectionEvent, Never> {
+        eventSubject.eraseToAnyPublisher()
+    }
+    
 
+    func connect(to device: CastDevice) async throws {
+        eventSubject.send(.started(device))
+        eventSubject.send(.progress(device, 0.3))
+        
+        try await withThrowingTaskGroup(of: Void.self) { group in
+        
+            group.addTask {
+                try await Task.sleep(nanoseconds: 2_000_000_000)
+            }
+         
+            group.addTask {
+                try await Task.sleep(nanoseconds: 5_000_000_000)
+                throw NetworkError.timedOut
+            }
+            
+            try await group.next()
+            group.cancelAll()
+        }
+        
+        eventSubject.send(.progress(device, 0.9))
+        try await Task.sleep(nanoseconds: 500_000_000)
+        
+        eventSubject.send(.completed(device))
+    }
+}
 class DeviceManager{
     private let statesub=CurrentValueSubject<ConnectionState, Never>(ConnectionState.disconnected)
-    var statePublisher: AnyPublisher<ConnectionState, Never> {
+    nonisolated var statePublisher: AnyPublisher<ConnectionState, Never> {
             statesub.eraseToAnyPublisher()
         }
-    var currentState: ConnectionState{
-        statesub.value
-    }
+    private let connectionEngine = ConnectionEngine()
+    
     var list: [CastDevice] = []
     init(){}
     
-    func transition(to next: ConnectionState) throws{
-        guard validTransition(from: currentState, to: next)else{
-            statesub.send(.failed(.illegalTransition))
-                        throw NetworkError.illegalTransition
+    private func transition(to next: ConnectionState) throws {
+            let current = statesub.value
+            guard validTransition(from: current, to: next) else {
+                statesub.send(.failed(.illegalTransition))
+                throw NetworkError.illegalTransition
+            }
+            statesub.send(next)
         }
-        statesub.send(next)
-        print("transitioned to \(next)")
-    }
+    
+    
+    func discover() async throws {
+            try transition(to: .discovering)
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+            
+            list = [
+                CastDevice(id: 1, name: "Living Room TV", type: .tv),
+                CastDevice(id: 2, name: "Meeting Projector", type: .projector),
+                CastDevice(id:3, name: "Study TV", type:.tv)
+            ]
+        }
     
     func addDevice(device: CastDevice){
         if !list.contains(where: {
@@ -88,6 +136,11 @@ class DeviceManager{
             list.append(device)
         }
     }
+    func getAvailableDevices() async throws -> [CastDevice] {
+        print(list)
+            return list
+        }
+    
     func findDevice(id: Int)-> CastDevice?{
         return list.first(where:{$0.id==id})
     }
@@ -97,22 +150,29 @@ class DeviceManager{
         })
     }
     
-    func discover() async throws{
-        try transition(to: .discovering)
-        try await Task.sleep(nanoseconds:1_000_000_000)
-        addDevice(device: CastDevice(id: 1, name: "Living Room TV", type: .tv))
-        addDevice(device: CastDevice(id: 2, name: "Meeting Projector", type: .projector))
-                
-        print("Discovery complete. Found \(list.count) devices.")
-        
-    }
+    
     func connect(to device: CastDevice) async throws {
             try transition(to: .connecting(device))
+        
             try await Task.sleep(nanoseconds: 2_000_000_000)
             
             try transition(to: .connected(device))
         }
-    
+    func connectBatch(to devices: [CastDevice]) async{
+        await withTaskGroup(of: Void.self){
+            group in
+            for d in devices{
+                group.addTask{
+                    do{
+                        try await self.connect(to:d)
+                    }
+                    catch{
+                        print(error)
+                    }
+                }
+            }
+        }
+    }
 }
 //dont want other codes to do dm.statesub.send()
 
@@ -123,12 +183,10 @@ Task {
     do {
         print("Starting discovery...........")
         try await manager.discover()
-        if let foundDevice = manager.findDevice(id: 1) {
-            print("Device found: \(foundDevice.name). Attempting connection..........")
-            try await manager.connect(to: foundDevice)
-            print("Successfully connected to \(foundDevice.name)!!!!!")
-        } else {
-            print("Device with ID 1 not found!")
+        let devices = try await manager.getAvailableDevices()
+        try await manager.connect(to: devices[Int.random(in: 1..<devices.count)])
+        manager.statePublisher.sink{
+            state in print("connection state: \(state)")
         }
     } catch {
         print("Operation failed with error: \(error)")

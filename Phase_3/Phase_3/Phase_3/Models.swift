@@ -46,10 +46,10 @@ extension ConnectionState {
         case (.connecting(_), .connected(_)): return
         case (.connecting(_), .failed(_)): return
         case (.connecting(_), .disconnected): return
-        case (.reconnecting, .disconnected): return
-        case (.reconnecting, .connected(_)): return
+        case (.reconnecting(_), .disconnected): return
+        case (.reconnecting(_), .connected(_)): return
         case (.connected(_), .disconnected): return
-        case (.connected(_), .reconnecting): return
+        case (.connected(_), .reconnecting(_)): return
         case (.failed(_), .discovering): return
         default:
             throw TransitionError.illegalTransition
