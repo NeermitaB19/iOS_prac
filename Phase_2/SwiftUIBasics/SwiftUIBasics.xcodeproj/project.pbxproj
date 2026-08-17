@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		7977A1C6302499B400A2C4E6 /* SwiftUIBasics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIBasics.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7977A1C6302499B400A2C4E6 /* SwiftUIBasics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = SwiftUIBasics.app; path = "/Users/nbhattacharya/Desktop/iOS Practice/Phase_2/SwiftUIBasics/build/Debug-iphoneos/SwiftUIBasics.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,16 +33,7 @@
 			isa = PBXGroup;
 			children = (
 				7977A1C8302499B400A2C4E6 /* SwiftUIBasics */,
-				7977A1C7302499B400A2C4E6 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		7977A1C7302499B400A2C4E6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				7977A1C6302499B400A2C4E6 /* SwiftUIBasics.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,7 +86,7 @@
 			mainGroup = 7977A1BD302499B400A2C4E6;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 7977A1C7302499B400A2C4E6 /* Products */;
+			productRefGroup = 7977A1BD302499B400A2C4E6;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

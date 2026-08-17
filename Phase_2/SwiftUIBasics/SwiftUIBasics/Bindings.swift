@@ -15,10 +15,12 @@ struct Bindings: View {
     let students = ["Harry", "Ron", "Hermione"]
     @State private var selectedStudent = "Harry"
     var body: some View {
+        
         VStack{
             Form{
                 TextField("Enter your name", text: $name)
             }
+       
             Text("Your name is \(name)")
             Form {
                 ForEach(0..<4) { number in
