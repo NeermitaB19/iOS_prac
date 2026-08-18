@@ -1,4 +1,7 @@
 import Cocoa
+import Foundation
+import SwiftUI
+import Combine
 
 var greeting = "Hello, playground"
 struct User: Codable {
@@ -128,15 +131,7 @@ let userInputs = ["10", "hello", "20", "apple", nil]
 let validNumbers = userInputs.map { ($0)}
 print(validNumbers)
 
-//reduce
-let prices = [231,546,234,123,789]
-var t = prices.reduce(0){n,m in n+m}
 
-print(t)
-
-//foreach
-let names = ["Neermita", "John", "Sarah"]
-names.forEach { print("Hello, \($0)!") }
 
 
 // --------------------------------------- filter and sort
@@ -380,7 +375,7 @@ class DataManager {
 }
 
 
-//MARK: JSON
+//MARK: JSON ACTUAL DECODING
 
 @propertyWrapper
 struct StringDecodable : Codable{
@@ -473,3 +468,156 @@ Task {
         print("Error: \(error)")
     }
 }
+
+// MARK: Higher order functions
+// map
+let numbers = [1, 2, 3,4,78]
+let doubled = numbers.map { $0 * 2 }
+
+// filter
+let evens = numbers.filter { $0 % 2 == 0 }
+
+//compactMap
+let userInputs2 = ["10", "20","7.8"]
+
+let validNumbers2 = userInputs2.map { Int($0) }
+let validNumbers3 = userInputs2.compactMap { Int($0) }
+print(validNumbers2)
+print(validNumbers3)
+
+//reduce
+let prices = [10, 20, 30]
+// Start at 0. Take the current total ($0) and add the next item ($1).
+let total = prices.reduce(0) { $0 + $1 }
+
+
+//foreach
+let names = ["Neermita", "John", "Sarah"]
+names.forEach { print("Hello, \($0)!") }
+
+
+// using let _ = Self._printChanges() we can check why the view updates when it does
+
+
+//MARK: how to efficiently use swiftui
+
+//1. avoid monolithic body properties.
+
+// swiftui can skip evaluating child views which haven't changed
+struct GoodDashboardView: View {
+    var body: some View {
+        VStack {
+            CounterButtonView()
+           // ExpensiveChartView()
+        }
+    }
+}
+
+struct CounterButtonView: View {
+    @State private var counter = 0
+    var body: some View {
+        Button("Increment: \(counter)") { counter += 1 }
+    }
+}
+
+// 2. Conform Custom View to Equatable
+// to avoid view layouts from rerendering. we can use custom == rules too.
+/*
+ struct Person: Equatable {
+     let name: String
+     let age: Int
+     
+     static func == (lhs: Person, rhs: Person) -> Bool {
+         return lhs.name == rhs.name
+     }
+ }
+ == compares the values of Car instances, as we defined it.
+ === checks whether two variables refer to the same instance.
+ */
+
+/*
+ struct NumberParity: View, Equatable {
+     
+     let number: Int
+     
+     var body: some View {
+         print("Body computed for number = \(number)")
+         
+         return VStack {
+             if number.isOdd {
+                 Text("ODD")
+             } else {
+                 Text("EVEN")
+             }
+         }
+         .foregroundColor(.white)
+         .padding(20)
+         .background(RoundedRectangle(cornerRadius: 10).fill(self.number.isOdd ? Color.red : Color.green))
+     }
+     
+     static func == (lhs: NumberParity, rhs: NumberParity) -> Bool {
+         return lhs.number.isOdd == rhs.number.isOdd
+     }
+ }
+ */
+
+//MARK: 3. Push State Down (Keep State Local)
+// anchor the state as close to the leaf view that consumes it as possible. otherwise a re-render cascade occurs
+
+/*
+ //  BAD: Root view knows about a toggle state meant only for an accordion item
+ struct RootView: View {
+     @State private var isExpanded = false // Forces RootView to re-render on toggle
+     
+     var body: some View {
+         VStack {
+             Text("Static Header")
+             DisclosureGroup(isExpanded: $isExpanded) {
+                 Text("Hidden content")
+             }
+         }
+     }
+ }
+
+ // GOOD: State is pushed down into its own child component
+ struct RootView: View {
+     var body: some View {
+         VStack {
+             Text("Static Header")
+             ExpandableSectionView() // State is encapsulated here
+         }
+     }
+ }
+
+ struct ExpandableSectionView: View {
+     @State private var isExpanded = false // Only this small view re-renders
+     var body: some View {
+         DisclosureGroup(isExpanded: $isExpanded) {
+             Text("Hidden content")
+         }
+     }
+ }
+ */
+
+// MARK: 4. Use lazy containers
+// standard vstack and hstack instantly render all the items in their closure, eve if they are off-screen.
+// Use LazyVStack or List inside a ScrollView, so that views are only initialized and rendered when they scroll near the viewport.
+/*
+ //  BAD: Renders all 10,000 items into memory immediately
+ ScrollView {
+     VStack {
+         ForEach(0..<10000) { i in
+             Text("Item \(i)")
+         }
+     }
+ }
+
+ // GOOD: Only renders the items currently visible on screen
+ ScrollView {
+     LazyVStack {
+         ForEach(0..<10000) { i in
+             Text("Item \(i)")
+         }
+     }
+ }
+ */

@@ -18,7 +18,9 @@ struct RenderCounterView: View {
 
     var body: some View {
         // This line forces the evaluation tracking every time body runs
+        let _ = Self._printChanges()
         let _ = renderCount
+        
         
         VStack(spacing: 20) {
             Text("Render Counter Demo")

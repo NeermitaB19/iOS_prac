@@ -25,6 +25,7 @@ struct ChildView : View {
             Button("Decrement"){
                 value-=1
             }
+            let _ = Self._printChanges()
         }.padding()
     }
 }
