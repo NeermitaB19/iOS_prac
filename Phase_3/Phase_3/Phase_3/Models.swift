@@ -56,3 +56,14 @@ extension ConnectionState {
         }
     }
 }
+
+enum PlaybackState : Equatable{
+    case playing
+    case paused
+}
+
+struct NowPlayingItem: Equatable {
+    let title: String
+    let subtitle: String
+    let artworkURL: URL?   // real poster image
+}

@@ -5,6 +5,8 @@ struct MediaRow: View {
     let title: String
     let items: [MediaItem]
     let viewModel: CastViewModel
+    let onSelect: (MediaItem) -> Void
+    
     var body: some View {
         if !items.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
@@ -36,6 +38,9 @@ struct MediaRow: View {
                                 }
                             }
                             .buttonStyle(.plain)
+                            .simultaneousGesture(TapGesture().onEnded {
+                                onSelect(item)
+                            })
                         }
                     }
                     .padding(.horizontal)
@@ -48,6 +53,7 @@ struct MediaRow: View {
 struct ContentView: View {
     @StateObject private var viewModel = CastViewModel(engine: FakeCastEngine())
     @StateObject private var homeVM = HomeViewModel()
+    @StateObject private var miniPlayer = MiniPlayerInteractor(engine: FakeCastEngine())
     @State private var isShowingCastSheet = false
 
     var body: some View {
@@ -98,13 +104,17 @@ struct ContentView: View {
                                     .clipped()
                                 }
                                 .buttonStyle(.plain)
+                                .simultaneousGesture(TapGesture().onEnded {
+                                    miniPlayer.play(featured)
+                                })
+
                             }
 
                             // Original + three NEW rows, all reusing MediaRow
-                            MediaRow(title: "Trending Now",       items: homeVM.trendingItems, viewModel: viewModel)
-                            MediaRow(title: "Popular Movies",     items: homeVM.popularMovies, viewModel: viewModel)
-                            MediaRow(title: "Top Rated",          items: homeVM.topRated,      viewModel: viewModel)
-                            MediaRow(title: "Popular TV Shows",   items: homeVM.popularTV,     viewModel: viewModel)
+                            MediaRow(title: "Trending Now",     items: homeVM.trendingItems, viewModel: viewModel, onSelect: { miniPlayer.play($0) })
+                            MediaRow(title: "Popular Movies",   items: homeVM.popularMovies, viewModel: viewModel, onSelect: { miniPlayer.play($0) })
+                            MediaRow(title: "Top Rated",        items: homeVM.topRated,      viewModel: viewModel, onSelect: { miniPlayer.play($0) })
+                            MediaRow(title: "Popular TV Shows", items: homeVM.popularTV,     viewModel: viewModel, onSelect: { miniPlayer.play($0) })
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.bottom, 30)
@@ -138,8 +148,14 @@ struct ContentView: View {
             }
         }
         .accentColor(.white)
+        .safeAreaInset(edge: .bottom) {
+            if case .connected = viewModel.state {
+                    MiniPlayerBar(interactor: miniPlayer)
+                }
+        }
         .task {
             await homeVM.loadHomeContent()
+            miniPlayer.start()
         }
     }
 }

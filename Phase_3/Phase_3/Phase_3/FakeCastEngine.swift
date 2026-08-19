@@ -10,21 +10,33 @@ import Combine
 
 class FakeCastEngine  {
     private let devicesSubject = CurrentValueSubject<[CastDevice], Never>([])
+   
     public var devicesPublisher : AnyPublisher<[CastDevice], Never>{
         devicesSubject.eraseToAnyPublisher()
     }
+    private let playbackStateSubject = CurrentValueSubject<PlaybackState, Never>(.paused)
+    public var playbackStatePublisher: AnyPublisher<PlaybackState, Never> {
+        playbackStateSubject.eraseToAnyPublisher()
+    }
+    private let nowPlayingSubject = CurrentValueSubject<NowPlayingItem?, Never>(nil)
     
+    public var nowPlayingPublisher: AnyPublisher<NowPlayingItem?, Never> {
+        nowPlayingSubject.eraseToAnyPublisher()
+    }
     
     private var timer : Timer?
     private let possibleDevices = [
         CastDevice(id: "100", name: "Living Room TV", type: .tv),
         CastDevice(id: "102", name: "Bedroom TV", type: .tv),
         CastDevice(id: "103", name: "Kitchen Display", type: .display),
-        CastDevice(id: "104", name: "Kids iPad", type: .display)
+        CastDevice(id: "104", name: "Study Room Projector", type: .display)
     ]
+    private var mediaTimer: Timer?
+    private var mediaIndex = 0
+  
     
     func startDiscovery(){
-        timer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true){
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true){
             [weak self] _ in
             guard let self = self else{
                 return
@@ -42,6 +54,21 @@ class FakeCastEngine  {
             timer = nil
             devicesSubject.send([])
         }
+    func togglePlayPause(){
+        let next : PlaybackState = (playbackStateSubject.value == .playing) ? .paused : .playing
+        print("currently: ",next)
+        playbackStateSubject.send(next)
+    }
+    // Called when the user picks a poster
+    func loadMedia(_ item: NowPlayingItem) {
+        nowPlayingSubject.send(item)
+        playbackStateSubject.send(.playing)   // auto-start playing on selection
+    }
+
+    func stopNowPlaying() {
+        mediaTimer?.invalidate()
+        mediaTimer = nil
+    }
     
 }
 
