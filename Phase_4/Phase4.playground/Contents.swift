@@ -1,6 +1,51 @@
 import Cocoa
 
 var greeting = "Hello, playground"
+// UIKit has AppDelegate, SceneDelegate, ViewController, Main, LaunchScreen files
+
+
+//AppDelegate - entry point of app. Initiate third party services, bug reporting, monitor for memory warning etc,. Bloated and Antipattern type
+//it is singleton - iOS instantiates your AppDelegate class once when the app launches only. We never use AppDelegate()
+
+// SceneDelegate
+//- holds the window. Single scene with single window
+// when window enters background or foreground?
+// customize how the app will be at launch (which viewcontroller is presented)
+
+
+//UIViewController and UIView
+//ViewController - takes care of the view + presentation lifecycle
+//MARK: TableView
+/*
+ single column containing vertically scrolling content - tableview
+ TableView is instance of UITableView class which inherits UIScrollView class
+ Row is simulated by the object of the UITableViewCell class
+ */
+//MARK: CollectionView
+/*
+ Gets the data from DataSource object which conforms with the UICollectionViewDataSource protocol
+ */
+
+
+
+//MARK: Hashable
+
+//make it easy to commpare and manage your data structures
+// The Hashable protocol allows instances to be efficiently located and compared in collections like Set and Dictionary by generating unique hash values. 
+struct Person: Hashable {
+ let name: String
+ let age: Int
+}
+
+let person1 = Person(name: "Alice", age: 30)
+let person2 = Person(name: "Bob", age: 25)
+let peopleSet: Set<Person> = [person1, person2]
+
+if peopleSet.contains(Person(name: "Alice", age: 30)) {
+ print("Found Alice!")
+}
+
+
 
 // FakeCastEngine -publishers-> Interactor -@Published viewState-> View
 // Interactor has all logic like play/pause, mapping etc,.
