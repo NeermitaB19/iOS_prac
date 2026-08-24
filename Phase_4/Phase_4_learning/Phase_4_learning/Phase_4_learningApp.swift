@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
-
+import CoreData
 @main
 struct Phase_4_learningApp: App {
+    let persistenceController =
+           PersistenceController.shared
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabViews()
+                .environment(\.managedObjectContext,
+                                    persistenceController.container.viewContext
+                                )
         }
     }
 }

@@ -8,11 +8,11 @@
 import Foundation
 import Combine
  
-enum CastDeviceType : String {
+enum CastDeviceType : String , Codable{
     case tv, speaker, display, group
 }
 
-struct CastDevice : Identifiable, Equatable{
+struct CastDevice : Identifiable, Equatable, Codable{
     let id : String
     let name : String
     var type : CastDeviceType = .tv
@@ -66,4 +66,31 @@ struct NowPlayingItem: Equatable {
     let title: String
     let subtitle: String
     let artworkURL: URL?   // real poster image
+}
+
+enum StreamType: Equatable {
+    case vod
+    case liveDVR
+}
+
+struct RemoteMediaState: Equatable {
+    var streamType: StreamType
+    var currentTime: TimeInterval   // where the playhead is
+    var duration: TimeInterval      // VOD: total length; live: current live edge
+    var isPlaying: Bool
+    var seekableStart: TimeInterval // start of what you can scrub to
+    var seekableEnd: TimeInterval   // end of scrubbable range (= live edge for live)
+}
+
+extension RemoteMediaState {
+    static func vod(duration: TimeInterval) -> RemoteMediaState {
+        RemoteMediaState(streamType: .vod, currentTime: 0, duration: duration,
+                         isPlaying: true, seekableStart: 0, seekableEnd: duration)
+    }
+    static func live(dvrWindow: TimeInterval, startedSecondsAgo: TimeInterval) -> RemoteMediaState {
+        RemoteMediaState(streamType: .liveDVR, currentTime: startedSecondsAgo,
+                         duration: startedSecondsAgo, isPlaying: true,
+                         seekableStart: max(0, startedSecondsAgo - dvrWindow),
+                         seekableEnd: startedSecondsAgo)
+    }
 }

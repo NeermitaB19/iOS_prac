@@ -1,4 +1,5 @@
 import Cocoa
+import XCTest
 
 var greeting = "Hello, playground"
 // UIKit has AppDelegate, SceneDelegate, ViewController, Main, LaunchScreen files
@@ -31,7 +32,7 @@ var greeting = "Hello, playground"
 //MARK: Hashable
 
 //make it easy to commpare and manage your data structures
-// The Hashable protocol allows instances to be efficiently located and compared in collections like Set and Dictionary by generating unique hash values. 
+// The Hashable protocol allows instances to be efficiently located and compared in collections like Set and Dictionary by generating unique hash values.
 struct Person: Hashable {
  let name: String
  let age: Int
@@ -44,6 +45,187 @@ let peopleSet: Set<Person> = [person1, person2]
 if peopleSet.contains(Person(name: "Alice", age: 30)) {
  print("Found Alice!")
 }
+//MARK: DATA PERSISTENCE
+//UserDefaults: lightweight, key-value store  intended for small amounts of non sensitive data like user prefs. Core Data is a robust object-graph and persistence framework designed for complex and huge datasets.
+
+//UserDefaults - Flattened Key-value store.
+
+//Core Data - object graph (backed by SQLite database). Relational, offline-first dbs.
+
+
+// Access the shared singleton instance
+let defaults = UserDefaults.standard
+
+// Writing Data
+defaults.set(true, forKey: "isDarkModeEnabled")
+defaults.set("John Doe", forKey: "username")
+
+// Reading Data
+let isDark = defaults.bool(forKey: "isDarkModeEnabled") // Defaults to false if key missing
+let user = defaults.string(forKey: "username") ?? "Guest"
+print(isDark)
+print(user)
+
+import CoreData
+
+struct PersistenceController {
+    static let shared = PersistenceController()
+
+    let container: NSPersistentContainer
+
+    init() {
+        container = NSPersistentContainer(name: "ModelNemo") // Matches your .xcdatamodeld filename
+        container.loadPersistentStores { (storeDescription, error) in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        }
+    }
+}
+
+
+func Add(_ a:Int, _ b:Int)-> Int{
+    return a+b
+}
+
+func testAdd(){
+//    XCAssertEqual(Add(2,3),5)
+}
+
+//Unit testing means testing one small piece of logic in isolation
+/*
+ Arrange
+    ↓
+ Create/setup required objects
+
+ Act
+    ↓
+ Call the code being tested
+
+ Assert
+    ↓
+ Check that the result is correct
+
+ */
+
+
+/*
+ XCTAssertTrue(condition)
+ XCTAssertNil(value)
+ XCTAssertNotEqual(actual, expected)
+
+ */
+
+/* use setUp if all testcases need a common resource (but fresh instance)
+ final class CalculatorTests: XCTestCase {
+
+     var calculator: Calculator!
+
+     override func setUp() {
+         super.setUp()
+
+         calculator = Calculator()
+     }
+
+     override func tearDown() {
+         calculator = nil
+
+         super.tearDown()
+     }
+
+     func testAdd() {
+         XCTAssertEqual(
+             calculator.add(2, 3),
+             5
+         )
+     }
+ }
+
+ */
+
+//import XCTest
+//@testable import MyApp
+//
+//final class CalculatorTests: XCTestCase {
+//
+//    func testAddition() {
+//
+//        let calculator = Calculator()
+//
+//        let result = calculator.add(2, 3)
+//
+//        XCTAssertEqual(result, 5)
+//    }
+//}
+
+
+enum LoginError: Error {
+    case invalidCredentials
+}
+
+func login(username: String, password: String) throws {
+    if password.isEmpty {
+        throw LoginError.invalidCredentials
+    }
+}
+func testLogin_emptyPassword_throwsError() {
+    XCTAssertThrowsError(
+        try login(username: "john", password: "")
+    )
+}
+
+do {
+    try login(username: "john", password: "")
+    print("Login succeeded")
+} catch {
+    print("Login failed:", error)
+}
+
+//MARK: Testing optionals
+func findUser() -> String? {
+    return "Johnn"
+}
+func testFindUser_returnsUser() {
+    let user = findUser()
+
+    XCTAssertNotNil(user)
+    XCTAssertEqual(user, "John")
+}
+let users = ["John", "Sarah", "Mike"]
+
+XCTAssertEqual(users.count, 3)
+XCTAssertTrue(users.contains("John"))
+XCTAssertFalse(users.contains("Bob"))
+XCTAssertEqual(
+    users,
+    ["John", "Sarah", "Mike"]
+)
+let username = "John"
+XCTAssertEqual(username, "John")
+XCTAssertNotEqual(username, "Mike")
+XCTAssertTrue(username.contains("oh"))
+
+XCTAssertEqual(
+    0.301,
+    0.3,
+    accuracy: 0.0001
+)
+
+// XCTest return types are always void, they are not a normal function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

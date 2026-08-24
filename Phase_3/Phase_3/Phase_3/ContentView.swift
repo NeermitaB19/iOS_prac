@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import AVKit
 // MARK: - Reusable horizontal poster row
 struct MediaRow: View {
     let title: String
@@ -53,8 +54,16 @@ struct MediaRow: View {
 struct ContentView: View {
     @StateObject private var viewModel = CastViewModel(engine: FakeCastEngine())
     @StateObject private var homeVM = HomeViewModel()
-    @StateObject private var miniPlayer = MiniPlayerInteractor(engine: FakeCastEngine())
+    @StateObject private var miniPlayer: MiniPlayerInteractor
+    @StateObject private var player: PlayerInteractor
     @State private var isShowingCastSheet = false
+    @State private var showExpandedPlayer = false
+
+    init() {
+        let engine = FakeCastEngine()                 // ONE engine...
+        _miniPlayer = StateObject(wrappedValue: MiniPlayerInteractor(engine: engine))
+        _player     = StateObject(wrappedValue: PlayerInteractor(engine: engine))  // ...shared
+    }
 
     var body: some View {
         NavigationView {
@@ -148,10 +157,16 @@ struct ContentView: View {
             }
         }
         .accentColor(.white)
+        .environmentObject(player)                    // share with PlayerDetailView
         .safeAreaInset(edge: .bottom) {
             if case .connected = viewModel.state {
-                    MiniPlayerBar(interactor: miniPlayer)
-                }
+                MiniPlayerBar(interactor: miniPlayer)
+                    .contentShape(Rectangle())        // makes the whole bar tappable
+                    .onTapGesture { showExpandedPlayer = true }
+            }
+        }
+        .fullScreenCover(isPresented: $showExpandedPlayer) {
+            PlayerView(interactor: player)
         }
         .task {
             await homeVM.loadHomeContent()
@@ -162,9 +177,11 @@ struct ContentView: View {
 
 // MARK: - 2. The Detail & Player Screen
 struct PlayerDetailView: View {
+    @EnvironmentObject private var player: PlayerInteractor
     let media: MediaItem
     @ObservedObject var viewModel: CastViewModel
     @State private var isShowingCastSheet = false
+    @State private var showPlayer = false
 
     var body: some View {
         ZStack {
@@ -173,7 +190,6 @@ struct PlayerDetailView: View {
             VStack(alignment: .leading, spacing: 0) {
                 // Video Player Area
                 ZStack {
-                    // FIX: fixed box + overlay + clip so the backdrop can't overflow width
                     Color.black
                         .frame(maxWidth: .infinity)
                         .frame(height: 250)
@@ -198,12 +214,16 @@ struct PlayerDetailView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .background(Color.black.opacity(0.75))
                     } else {
-                        Image(systemName: "play.circle.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.white)
+                        Button {
+                            showPlayer = true
+                        } label: {
+                            Image(systemName: "play.circle.fill")
+                                .font(.system(size: 60))
+                                .foregroundColor(.white)
+                        }
                     }
                 }
-                .frame(height: 250) // FIX: pin the player ZStack height
+                .frame(height: 250)
 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 12) {
@@ -223,6 +243,9 @@ struct PlayerDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .fullScreenCover(isPresented: $showPlayer) {
+            PlayerView(interactor: player)
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {

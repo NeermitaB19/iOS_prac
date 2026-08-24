@@ -28,15 +28,15 @@ class MiniPlayerInteractor: ObservableObject {
 
     func start() {
         Publishers.CombineLatest(engine.nowPlayingPublisher,
-                                 engine.playbackStatePublisher)
+                                 engine.remoteStatePublisher)      // <-- shared truth
             .receive(on: DispatchQueue.main)
-            .map { item, playback -> ViewState<MiniPlayerViewData> in
-                guard let item = item else { return .idle }   // nothing tapped yet
+            .map { item, remote -> ViewState<MiniPlayerViewData> in
+                guard let item = item else { return .idle }
                 return .loaded(MiniPlayerViewData(
                     title: item.title,
                     subtitle: item.subtitle,
                     artworkURL: item.artworkURL,
-                    isPlaying: playback == .playing
+                    isPlaying: remote.isPlaying                    // <-- from remoteState
                 ))
             }
             .sink { [weak self] state in self?.viewState = state }
@@ -55,7 +55,6 @@ class MiniPlayerInteractor: ObservableObject {
     }
 
     func togglePlayPause() {
-        engine.togglePlayPause()
-        
+        engine.toggleRemotePlayPause()     // same command the expanded player uses
     }
 }
