@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class FakeCastEngine  {
+class FakeCastEngine: PlaybackEngine {
     private let devicesSubject = CurrentValueSubject<[CastDevice], Never>([])
    
     public var devicesPublisher : AnyPublisher<[CastDevice], Never>{

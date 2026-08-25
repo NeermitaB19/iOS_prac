@@ -166,7 +166,7 @@ struct ContentView: View {
             }
         }
         .fullScreenCover(isPresented: $showExpandedPlayer) {
-            PlayerView(interactor: player)
+            PlayerView(interactor: player, castViewModel: viewModel)
         }
         .task {
             await homeVM.loadHomeContent()
@@ -244,7 +244,7 @@ struct PlayerDetailView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $showPlayer) {
-            PlayerView(interactor: player)
+            PlayerView(interactor: player, castViewModel: viewModel)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

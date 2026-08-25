@@ -5,7 +5,7 @@ class CastViewModel: ObservableObject {
     @Published private(set) var state: ConnectionState = .disconnected
     @Published private(set) var availableDevices: [CastDevice] = []
     
-    private let defaults = UserDefaults.standard
+    private let defaults : UserDefaults //standard is a shared global state
     private let connectedDeviceKey = "connectedDevice"
     
     private func persist(_ device: CastDevice?) {
@@ -26,11 +26,11 @@ class CastViewModel: ObservableObject {
     private let engine: FakeCastEngine
     private var cancellables = Set<AnyCancellable>()
     
-    init(engine: FakeCastEngine) {
+    init(engine: FakeCastEngine, defaults: UserDefaults = .standard) {
         self.engine = engine
+        self.defaults = defaults
         restoreSession()
     }
-    
   
     
     private func transition(to next: ConnectionState) {

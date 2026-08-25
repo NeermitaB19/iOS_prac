@@ -21,11 +21,11 @@ struct PlayerViewData: Equatable {
 final class PlayerInteractor: ObservableObject {
     @Published private(set) var viewState: ViewState<PlayerViewData> = .idle
 
-    private let engine: FakeCastEngine
+    private let engine: PlaybackEngine
     private var cancellables = Set<AnyCancellable>()
     private var latest: RemoteMediaState?   // kept so seek math has the raw numbers
 
-    init(engine: FakeCastEngine) {
+    init(engine: PlaybackEngine) {
         self.engine = engine
     }
 

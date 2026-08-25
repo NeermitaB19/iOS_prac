@@ -19,10 +19,10 @@ class MiniPlayerInteractor: ObservableObject {
     // only code inside this viewmodel can change it, no view can
     @Published private(set) var viewState: ViewState<MiniPlayerViewData> = .idle
 
-    private let engine: FakeCastEngine
+    private let engine: PlaybackEngine
     private var cancellables = Set<AnyCancellable>()
 
-    init(engine: FakeCastEngine) {
+    init(engine: PlaybackEngine) {
         self.engine = engine
     }
 
