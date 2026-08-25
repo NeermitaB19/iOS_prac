@@ -24,7 +24,9 @@ final class PlayerInteractor: ObservableObject {
     private let engine: PlaybackEngine
     private var cancellables = Set<AnyCancellable>()
     private var latest: RemoteMediaState?   // kept so seek math has the raw numbers
-
+    
+    var viewStateBox: Bool { if case .loaded = viewState { return true }; return false }
+    
     init(engine: PlaybackEngine) {
         self.engine = engine
     }

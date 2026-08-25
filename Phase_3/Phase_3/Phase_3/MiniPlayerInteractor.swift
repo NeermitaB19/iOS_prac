@@ -21,7 +21,9 @@ class MiniPlayerInteractor: ObservableObject {
 
     private let engine: PlaybackEngine
     private var cancellables = Set<AnyCancellable>()
-
+  
+    var viewStateBox: Bool { if case .loaded = viewState { return true }; return false }
+    
     init(engine: PlaybackEngine) {
         self.engine = engine
     }

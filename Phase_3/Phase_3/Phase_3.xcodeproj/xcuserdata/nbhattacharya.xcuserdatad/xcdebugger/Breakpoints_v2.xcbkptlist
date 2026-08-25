@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "E7BFBCCA-F95C-4054-AC0D-F5EAA89E0264"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0E166267-71A0-43C1-91C9-2F8CBD4AC699"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Phase_3Tests/MiniPlayerInteractorTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12"
+            endingLineNumber = "12"
+            landmarkName = "MiniPlayerInteractorTests"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  uuid = "0E166267-71A0-43C1-91C9-2F8CBD4AC699 - aa2214452e753c2f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Phase_3Tests.MiniPlayerInteractorTests.__allocating_init(invocation: Swift.Optional&lt;__C.NSInvocation&gt;) -&gt; Phase_3Tests.MiniPlayerInteractorTests"
+                  moduleName = "Phase_3Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nbhattacharya/Desktop/iOS%20Practice/Phase_3/Phase_3/Phase_3Tests/MiniPlayerInteractorTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12">
+               </Location>
+               <Location
+                  uuid = "0E166267-71A0-43C1-91C9-2F8CBD4AC699 - d589bcf3329f1531"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Phase_3Tests.MiniPlayerInteractorTests.init(invocation: Swift.Optional&lt;__C.NSInvocation&gt;) -&gt; Phase_3Tests.MiniPlayerInteractorTests"
+                  moduleName = "Phase_3Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nbhattacharya/Desktop/iOS%20Practice/Phase_3/Phase_3/Phase_3Tests/MiniPlayerInteractorTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "13"
+                  endingLineNumber = "13">
+               </Location>
+               <Location
+                  uuid = "0E166267-71A0-43C1-91C9-2F8CBD4AC699 - 175360e8cc2c6560"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Phase_3Tests.MiniPlayerInteractorTests.__allocating_init(selector: ObjectiveC.Selector) -&gt; Phase_3Tests.MiniPlayerInteractorTests"
+                  moduleName = "Phase_3Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nbhattacharya/Desktop/iOS%20Practice/Phase_3/Phase_3/Phase_3Tests/MiniPlayerInteractorTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12">
+               </Location>
+               <Location
+                  uuid = "0E166267-71A0-43C1-91C9-2F8CBD4AC699 - 684aee4e2c21e431"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Phase_3Tests.MiniPlayerInteractorTests.init(selector: ObjectiveC.Selector) -&gt; Phase_3Tests.MiniPlayerInteractorTests"
+                  moduleName = "Phase_3Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nbhattacharya/Desktop/iOS%20Practice/Phase_3/Phase_3/Phase_3Tests/MiniPlayerInteractorTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "13"
+                  endingLineNumber = "13">
+               </Location>
+               <Location
+                  uuid = "0E166267-71A0-43C1-91C9-2F8CBD4AC699 - ce164c9b39f249f3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Phase_3Tests.MiniPlayerInteractorTests.__allocating_init() -&gt; Phase_3Tests.MiniPlayerInteractorTests"
+                  moduleName = "Phase_3Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nbhattacharya/Desktop/iOS%20Practice/Phase_3/Phase_3/Phase_3Tests/MiniPlayerInteractorTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0">
+               </Location>
+               <Location
+                  uuid = "0E166267-71A0-43C1-91C9-2F8CBD4AC699 - f62580bd037de378"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Phase_3Tests.MiniPlayerInteractorTests.init() -&gt; Phase_3Tests.MiniPlayerInteractorTests"
+                  moduleName = "Phase_3Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nbhattacharya/Desktop/iOS%20Practice/Phase_3/Phase_3/Phase_3Tests/MiniPlayerInteractorTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "13"
+                  endingLineNumber = "13">
+               </Location>
+               <Location
+                  uuid = "0E166267-71A0-43C1-91C9-2F8CBD4AC699 - 2c1a370acf36c6c3"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Phase_3Tests.MiniPlayerInteractorTests.__deallocating_deinit"
+                  moduleName = "Phase_3Tests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/nbhattacharya/Desktop/iOS%20Practice/Phase_3/Phase_3/Phase_3Tests/MiniPlayerInteractorTests.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "12"
+                  endingLineNumber = "12">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

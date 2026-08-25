@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7979851E303D745A0055FEDF /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 7979851D303D745A0055FEDF /* SnapshotTesting */; };
+		79798520303D745F0055FEDF /* InlineSnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 7979851F303D745F0055FEDF /* InlineSnapshotTesting */; };
+		79798522303D74640055FEDF /* SnapshotTestingCustomDump in Frameworks */ = {isa = PBXBuildFile; productRef = 79798521303D74640055FEDF /* SnapshotTestingCustomDump */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		79798503303D62B00055FEDF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -46,6 +52,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79798522303D74640055FEDF /* SnapshotTestingCustomDump in Frameworks */,
+				79798520303D745F0055FEDF /* InlineSnapshotTesting in Frameworks */,
+				7979851E303D745A0055FEDF /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +66,7 @@
 			children = (
 				797983D8302C3E980055FEDF /* Phase_3 */,
 				79798500303D62B00055FEDF /* Phase_3Tests */,
+				7979851C303D74380055FEDF /* Frameworks */,
 				797983D7302C3E980055FEDF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -68,6 +78,13 @@
 				797984FF303D62AF0055FEDF /* Phase_3Tests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7979851C303D74380055FEDF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -113,6 +130,9 @@
 			);
 			name = Phase_3Tests;
 			packageProductDependencies = (
+				7979851D303D745A0055FEDF /* SnapshotTesting */,
+				7979851F303D745F0055FEDF /* InlineSnapshotTesting */,
+				79798521303D74640055FEDF /* SnapshotTestingCustomDump */,
 			);
 			productName = Phase_3Tests;
 			productReference = 797984FF303D62AF0055FEDF /* Phase_3Tests.xctest */;
@@ -472,6 +492,24 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7979851D303D745A0055FEDF /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79798508303D633B0055FEDF /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+		7979851F303D745F0055FEDF /* InlineSnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79798508303D633B0055FEDF /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = InlineSnapshotTesting;
+		};
+		79798521303D74640055FEDF /* SnapshotTestingCustomDump */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79798508303D633B0055FEDF /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTestingCustomDump;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 797983CE302C3E980055FEDF /* Project object */;
 }
