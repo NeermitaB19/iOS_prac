@@ -5,6 +5,6 @@
 - [x] Phase 3 - Device picker UI (SwiftUI)
 - [x] Phase 4 - Mini player + the Interactor pattern
 - [x] Phase 5 - Expanded player + transport controls
-- [ ] Phase 6 - Unit + snapshot tests (Mock/Spy conventions)
+- [x] Phase 6 - Unit + snapshot tests (Mock/Spy conventions)
 - [ ] Phase 7 - Polish: edge cases, accessibility, design tokens
 - [ ] Phase 8 - end-to-end FauxCast demo
