@@ -19,40 +19,43 @@ struct MiniPlayerBar: View {
             Text(message).font(.caption).foregroundColor(.red).padding()
 
         case .loaded(let data):
-            HStack(spacing: 12) {
+            HStack(spacing: Theme.Spacing.m) {
                 Color.clear
-                    .frame(width: 48, height: 48)
+                    .frame(width: Theme.Size.artworkThumb, height: Theme.Size.artworkThumb)
                     .overlay {
                         AsyncImage(url: data.artworkURL) { image in
                             image.resizable().scaledToFill()
                         } placeholder: {
-                            Rectangle().fill(Color.gray.opacity(0.4))
+                            Rectangle().fill(Theme.Palette.surfaceMuted)
                                 .overlay(Image(systemName: "play.rectangle.fill")
-                                    .foregroundColor(.white))
+                                    .foregroundColor(Theme.Palette.primaryText))
                         }
                     }
-                    .frame(width: 48, height: 48)
+                    .frame(width: Theme.Size.artworkThumb, height: Theme.Size.artworkThumb)
                     .clipped()
-                    .cornerRadius(6)
+                    .cornerRadius(Theme.Radius.s)
+                    .accessibilityHidden(true)               // decorative artwork
 
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     Text(data.title).font(.subheadline).bold()
-                        .foregroundColor(.white).lineLimit(1)
+                        .foregroundColor(Theme.Palette.primaryText).lineLimit(1)
                     Text(data.subtitle).font(.caption)
-                        .foregroundColor(.gray).lineLimit(1)
+                        .foregroundColor(Theme.Palette.secondaryText).lineLimit(1)
                 }
 
                 Spacer()
 
                 Button(action: { interactor.togglePlayPause() }) {
                     Image(systemName: data.isPlaying ? "pause.fill" : "play.fill")
-                        .font(.title2).foregroundColor(.white)
+                        .font(.title2).foregroundColor(Theme.Palette.primaryText)
                 }
+                .accessibilityLabel(data.isPlaying ? "Pause" : "Play")
+                .accessibilityHint("Toggles playback")
             }
-            .padding(.horizontal, 12).padding(.vertical, 8)
-            .background(Color(white: 0.15))
-            .cornerRadius(12)
-            .padding(.horizontal)
-        }
+            .padding(.horizontal, Theme.Spacing.m)
+            .padding(.vertical, Theme.Spacing.s)
+            .background(Theme.Palette.surface)
+            .cornerRadius(Theme.Radius.l)
+            .padding(.horizontal, Theme.Spacing.l)        }
     }
 }
