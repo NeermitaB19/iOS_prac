@@ -66,7 +66,7 @@ final class PlayerInteractorTests: XCTestCase {
     func test_live_behindEdge_showsNegativeOffset() {
         let s = RemoteMediaState(streamType: .liveDVR, currentTime: 570, duration: 600,
                                  isPlaying: true, seekableStart: 0, seekableEnd: 600)
-        let data = loaded(sending: s) { !$0.isAtLiveEdge }
+        let data = loaded(sending: s) { $0.isLive && !$0.isAtLiveEdge }
         XCTAssertEqual(data?.isLive, true)
         XCTAssertEqual(data?.trailingLabel, "-00:30")
     }
