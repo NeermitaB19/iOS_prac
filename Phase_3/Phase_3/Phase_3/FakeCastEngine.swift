@@ -36,19 +36,17 @@ class FakeCastEngine: PlaybackEngine {
   
     
     func startDiscovery(){
-        timer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true){
-            [weak self] _ in
-            guard let self = self else{
-                return
-            }
-            
+        let t = Timer(timeInterval: 2.0, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
             let shuffle = self.possibleDevices.shuffled()
             let randomCount = Int.random(in: 0...self.possibleDevices.count)
             let foundDevices = Array(shuffle.prefix(randomCount))
-            
             self.devicesSubject.send(foundDevices)
         }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
     }
+    // common mode because VoiceOver holds the run loop aggresively, so timer wont fire in default mode
     func stopDiscovery() {
             timer?.invalidate()
             timer = nil
@@ -84,7 +82,9 @@ class FakeCastEngine: PlaybackEngine {
     // The heartbeat: advances progress once per second.
     func startRemotePlayback() {
         progressTimer?.invalidate()
-        progressTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        
+        
+        let t = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             var s = self.remoteStateSubject.value
 
@@ -101,6 +101,8 @@ class FakeCastEngine: PlaybackEngine {
             }
             self.remoteStateSubject.send(s)
         }
+        RunLoop.main.add(t, forMode: .common)
+        progressTimer = t
     }
 
     func stopRemotePlayback() {
@@ -138,6 +140,16 @@ class FakeCastEngine: PlaybackEngine {
             ? .vod(duration: 2700)
             : .live(dvrWindow: dvrWindow, startedSecondsAgo: 600)
         remoteStateSubject.send(fresh)
+    }
+    
+    private let connectionEventSubject = PassthroughSubject<CastConnectionEvent, Never>()
+    public var connectionEvents: AnyPublisher<CastConnectionEvent, Never> {
+        connectionEventSubject.eraseToAnyPublisher()
+    }
+
+    // Called to simulate the cast device dropping off the network.
+    func simulateDeviceLost() {
+        connectionEventSubject.send(.lost)
     }
     
 }

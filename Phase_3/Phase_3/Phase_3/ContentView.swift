@@ -39,9 +39,9 @@ struct MediaRow: View {
                                 }
                             }
                             .buttonStyle(.plain)
-                            .simultaneousGesture(TapGesture().onEnded {
-                                onSelect(item)
-                            })
+                            .simultaneousGesture(TapGesture().onEnded { onSelect(item) })
+                            .accessibilityLabel(item.displayName)
+                            .accessibilityHint("Double tap to play")
                         }
                     }
                     .padding(.horizontal)
@@ -68,14 +68,22 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color.black.ignoresSafeArea()
+                Theme.Palette.background.ignoresSafeArea()
 
                 if homeVM.isLoading {
-                    ProgressView("Loading Content...")
-                        .foregroundColor(.white)
-                } else {
+                    ProgressView("Loading Content…").foregroundColor(Theme.Palette.primaryText)
+                } else if homeVM.loadFailed && homeVM.trendingItems.isEmpty {
+                    VStack(spacing: Theme.Spacing.l) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.largeTitle).foregroundColor(Theme.Palette.live)
+                        Text("Couldn't load content").foregroundColor(Theme.Palette.primaryText)
+                        Button("Retry") { Task { await homeVM.loadHomeContent() } }
+                            .buttonStyle(.borderedProminent)
+                    }
+                    .accessibilityElement(children: .combine)
+                }  else {
                     ScrollView {
-                        VStack(alignment: .leading, spacing: 20) {
+                        VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
 
                             // Featured Banner (Top Item)
                             if let featured = homeVM.trendingItems.first {
@@ -94,7 +102,7 @@ struct ContentView: View {
                                             .clipped()
 
                                         LinearGradient(
-                                            colors: [Color.black.opacity(0), Color.black],
+                                            colors: [Theme.Palette.background.opacity(0), Theme.Palette.background],
                                             startPoint: .top, endPoint: .bottom
                                         )
 
@@ -135,8 +143,7 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        isShowingCastSheet = true
-                        viewModel.startDiscovering()
+                        viewModel.presentPicker()
                     }) {
                         if case .connected = viewModel.state {
                             Image(systemName: "tv.badge.wifi.fill")
@@ -148,7 +155,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .sheet(isPresented: $isShowingCastSheet, onDismiss: {
+            .sheet(isPresented: $viewModel.isPickerPresented, onDismiss: {
                 if case .discovering = viewModel.state {
                     viewModel.stopDiscovering()
                 }
@@ -157,12 +164,17 @@ struct ContentView: View {
             }
         }
         .accentColor(.white)
-        .environmentObject(player)                    // share with PlayerDetailView
+        .environmentObject(player)
+        .environmentObject(miniPlayer)   
         .safeAreaInset(edge: .bottom) {
             if case .connected = viewModel.state {
                 MiniPlayerBar(interactor: miniPlayer)
-                    .contentShape(Rectangle())        // makes the whole bar tappable
+                    .contentShape(Rectangle())
                     .onTapGesture { showExpandedPlayer = true }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityHint("Opens the full screen player")
+                    .accessibilityAction { showExpandedPlayer = true }   // VoiceOver activation
             }
         }
         .fullScreenCover(isPresented: $showExpandedPlayer) {
@@ -182,15 +194,16 @@ struct PlayerDetailView: View {
     @ObservedObject var viewModel: CastViewModel
     @State private var isShowingCastSheet = false
     @State private var showPlayer = false
-
+    @EnvironmentObject private var miniPlayer: MiniPlayerInteractor
+    
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            Theme.Palette.background.ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 0) {
                 // Video Player Area
                 ZStack {
-                    Color.black
+                    Theme.Palette.background
                         .frame(maxWidth: .infinity)
                         .frame(height: 250)
                         .overlay {
@@ -212,7 +225,7 @@ struct PlayerDetailView: View {
                                 .foregroundColor(.white)
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.black.opacity(0.75))
+                        .background(Theme.Palette.background.opacity(0.75))
                     } else {
                         Button {
                             showPlayer = true
@@ -243,14 +256,14 @@ struct PlayerDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear { miniPlayer.play(media) }
         .fullScreenCover(isPresented: $showPlayer) {
             PlayerView(interactor: player, castViewModel: viewModel)
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    isShowingCastSheet = true
-                    viewModel.startDiscovering()
+                    viewModel.presentPicker()
                 }) {
                     if case .connected = viewModel.state {
                         Image(systemName: "tv.badge.wifi.fill")
@@ -259,87 +272,18 @@ struct PlayerDetailView: View {
                         Image(systemName: "tv.badge.wifi")
                             .foregroundColor(.white)
                     }
+                    
                 }
+                .accessibilityLabel({
+                    if case .connected(let d) = viewModel.state { return "Casting to \(d.name)" }
+                    return "Cast to device"
+                }())
             }
         }
-        .sheet(isPresented: $isShowingCastSheet, onDismiss: {
-            if case .discovering = viewModel.state {
-                viewModel.stopDiscovering()
-            }
-        }) {
-            CastSheetView(viewModel: viewModel)
-        }
+        
     }
 }
 
-// MARK: - 3. The Cast Device Picker Sheet
-struct CastSheetView: View {
-    @ObservedObject var viewModel: CastViewModel
-    @Environment(\.dismiss) var dismiss
-
-    var body: some View {
-        NavigationView {
-            VStack {
-                switch viewModel.state {
-                case .discovering, .disconnected, .failed:
-                    if viewModel.availableDevices.isEmpty {
-                        VStack(spacing: 20) {
-                            ProgressView()
-                            Text("Looking for devices...")
-                                .foregroundColor(.gray)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else {
-                        List(viewModel.availableDevices) { device in
-                            Button(action: {
-                                viewModel.connect(to: device)
-                            }) {
-                                HStack {
-                                    Image(systemName: device.type == .tv ? "tv" : "display")
-                                    Text(device.name)
-                                        .foregroundColor(.primary)
-                                    Spacer()
-                                }
-                            }
-                        }
-                    }
-
-                case .connecting(let device):
-                    VStack(spacing: 20) {
-                        ProgressView()
-                        Text("Connecting to \(device.name)...")
-                            .font(.headline)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-                case .connected(let device), .reconnecting(let device):
-                    VStack(spacing: 20) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 60))
-                            .foregroundColor(.green)
-                        Text("Connected to \(device.name)")
-                            .font(.headline)
-
-                        Button("Disconnect") {
-                            viewModel.disconnect()
-                            dismiss()
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.red)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-            }
-            .navigationTitle("Cast to...")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Close") { dismiss() }
-                }
-            }
-        }
-    }
-}
 
 #Preview {
     ContentView()

@@ -8,9 +8,11 @@ class HomeViewModel: ObservableObject {
     @Published var topRated: [MediaItem] = []
     @Published var popularTV: [MediaItem] = []
     @Published var isLoading = false
+    @Published var loadFailed = false
 
-    func loadHomeContent() async {
+        func loadHomeContent() async {
         isLoading = true
+        loadFailed = false
         defer { isLoading = false }
 
         do {

@@ -43,6 +43,12 @@ struct PlayerView: View {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.down").font(.title2).foregroundColor(.white)
                 }
+                .accessibilityLabel("Close player")
+                Button { castViewModel.debugSimulateDeviceLost() } label: {
+                    Image(systemName: "wifi.slash").font(.title2).foregroundColor(.white)
+                }
+                .accessibilityLabel("Simulate device lost")
+               
                 Spacer()
                 // VOD <-> Live/DVR toggle
                 Picker("", selection: Binding(
@@ -54,6 +60,11 @@ struct PlayerView: View {
                 }
                 .pickerStyle(.segmented)
                 .frame(width: 200)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Stream mode")
+                .accessibilityValue(data.isLive ? "Live and DVR" : "Video on demand")
+                .accessibilityHint("Double tap to switch mode")
+                .accessibilityAddTraits(.isButton)
             }
             .padding()
 
@@ -78,7 +89,10 @@ struct PlayerView: View {
                     isScrubbing = editing
                     if !editing { interactor.seek(toFraction: scrubValue) }
                 }
-                .tint(.white)
+                .tint(Theme.Palette.primaryText)
+                .accessibilityLabel("Playback position")
+                .accessibilityValue("\(data.currentTimeLabel) of \(data.trailingLabel)")
+                .accessibilityHint("Swipe up or down to scrub")
 
                 HStack {
                     Text(data.currentTimeLabel)
@@ -93,26 +107,24 @@ struct PlayerView: View {
                     Button { interactor.skipBackward() } label: {
                         Image(systemName: "gobackward.10")
                     }
+                    .accessibilityLabel("Skip back 10 seconds")
 
                     Button { interactor.togglePlayPause() } label: {
                         Image(systemName: data.isPlaying ? "pause.fill" : "play.fill")
                             .font(.system(size: 44))
                     }
+                    .accessibilityLabel(data.isPlaying ? "Pause" : "Play")
 
-                    // ---- The branching control ----
                     if data.isLive {
-                        Button { interactor.goToLive() } label: {
-                            Text("LIVE")
-                                .font(.headline)
-                                .padding(.horizontal, 12).padding(.vertical, 6)
-                                .background(data.isAtLiveEdge ? Color.red : Color.gray)
-                                .clipShape(Capsule())
-                        }
-                        .disabled(data.isAtLiveEdge)
+                        Button { interactor.goToLive() } label: { Text("LIVE") /* … */ }
+                            .disabled(data.isAtLiveEdge)
+                            .accessibilityLabel("Jump to live")
+                            .accessibilityHint(data.isAtLiveEdge ? "Already at live edge" : "Skips to the live broadcast")
                     } else {
                         Button { interactor.skipForward() } label: {
                             Image(systemName: "goforward.10")
                         }
+                        .accessibilityLabel("Skip forward 10 seconds")
                     }
                 }
                 .font(.title)
@@ -121,8 +133,28 @@ struct PlayerView: View {
             .padding()
         }
         // Keep the slider in sync with the ticking timer — but not while dragging.
+        // Keep the slider in sync with the ticking timer — but not while dragging.
         .onChange(of: data.progress) { _, newValue in
             if !isScrubbing { scrubValue = newValue }
         }
+        // Show a "Reconnecting…" cover while the device is being recovered.
+        .overlay {
+            if case .reconnecting(let device) = castViewModel.state {
+                VStack(spacing: 16) {
+                    ProgressView().tint(.white)
+                    Text("Reconnecting to \(device.name)…")
+                        .foregroundColor(.white)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.black.opacity(0.85))
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Reconnecting to \(device.name)")
+            }
+        }
+        // Device lost for good -> close the player so the picker (underneath) shows.
+        .onChange(of: castViewModel.state) { _, newState in
+            if case .disconnected = newState { dismiss() }
+        }
     }
+    
 }

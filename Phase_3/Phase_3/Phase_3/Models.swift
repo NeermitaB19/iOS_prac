@@ -94,3 +94,7 @@ extension RemoteMediaState {
                          seekableEnd: startedSecondsAgo)
     }
 }
+
+enum CastConnectionEvent {
+    case lost
+}
