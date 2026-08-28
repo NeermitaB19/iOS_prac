@@ -136,8 +136,7 @@ those into one `FakeCastEngine`, but the responsibilities line up cleanly.
 
 ### What FauxCast intentionally leaves out
 
-These exist in production but are **out of scope** here — worth naming in the
-demo so the boundary is clear:
+These exist in production but are **out of scope** here — 
 
 - The **GoogleCast SDK** (`GCKCastContext`, `GCKSessionManager`,
   `GCKRemoteMediaClient`) and a real receiver (`beam-cast-web-receiver`).
