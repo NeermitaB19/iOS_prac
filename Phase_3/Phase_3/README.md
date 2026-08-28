@@ -148,27 +148,4 @@ demo so the boundary is clear:
 - **Local ↔ cast handoff** (`CastPlaybackCoordinator` pausing the local player)
   — FauxCast has no local `AVPlayer`.
 
-### The takeaway
-
-If you understand FauxCast's `Engine → Interactor → ViewState → View` loop, the
-discovery/session/remote-media publishers, and the VOD-vs-live branching, then
-`ChromecastFeature` is the same architecture with (a) the GCK SDK behind
-`CastSenderController`/`CastPlayer` and (b) a real receiver as the source of
-truth instead of a timer.
-
 ---
-
-## Demo script (≈3 min)
-
-1. **Frame it:** "Sender = remote control, not mirroring." Point at the timer in
-   `FakeCastEngine.startRemotePlayback()` — that's the pretend receiver.
-2. **Discover → connect:** open the picker, connect, narrate the
-   `ConnectionState` transitions.
-3. **Mini player:** show it appear on load; toggle play/pause and note it stays
-   in sync with the expanded player (single remote-state truth).
-4. **Expanded player:** scrub (seek), skip ±10s, then flip **VOD ↔ Live/DVR** and
-   show how the controls change.
-5. **Unhappy path:** simulate device lost → reconnecting → back to picker.
-6. **Map to prod:** point at the mapping table — "`FakeCastEngine` is
-   `CastSenderController` + `CastPlayer`; this interactor is
-   `CastMiniPlayerInteractor`; the receiver here is a timer."
