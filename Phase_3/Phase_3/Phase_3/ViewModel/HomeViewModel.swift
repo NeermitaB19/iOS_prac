@@ -28,6 +28,7 @@ class HomeViewModel: ObservableObject {
             self.popularTV     = try await tv
         } catch {
             print("Failed to load home content: \(error)")
+            loadFailed = true
         }
     }
 }

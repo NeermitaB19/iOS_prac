@@ -81,9 +81,7 @@ print(type(of:unaryPostFix))
 // 3. binary infix
 let result = 1+2
 // 4. ternary
-let message = myAge > yourAge
-? print("Im older")
-: print("Im younger")
+let message = myAge > yourAge ? print("Im older") : print("Im younger")
 
 print("Your age is \(yourAge)")
 
@@ -770,6 +768,7 @@ extension Double {
     var cm: Double { return self / 100.0 }
     var mm: Double { return self / 1_000.0 }
     var ft: Double { return self / 3.28084 }
+    
 }
 let oneInch = 25.4.mm
 print("One inch is \(oneInch) meters")

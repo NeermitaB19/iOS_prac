@@ -390,3 +390,53 @@ print(evens)
 
 //higher order functions
 //compact map, sorting, reduce, for each
+
+func ff(myname : @escaping () -> ()){}
+
+//class A {
+//    var b = B()
+//
+//    init() {
+//        b.completion = { value in
+//            print(value)
+//        }
+//
+//        b.sendValue()
+//    }
+//}
+//
+//class B {
+//    var completion: ((Int) -> Void)?
+//
+//    func sendValue() {
+//        completion?(9)
+//    }
+//}
+
+protocol BDelegate: AnyObject {
+    func didReceiveValue(_ value: Int)
+}
+
+class A: BDelegate {
+
+    var b = B()
+
+    init() {
+        b.delegate = self
+        b.sendValue()
+    }
+
+    func didReceiveValue(_ value: Int) {
+        print(value)
+    }
+}
+
+class B {
+
+    weak var delegate: BDelegate?
+
+    func sendValue() {
+        delegate?.didReceiveValue(9)
+    }
+}
+

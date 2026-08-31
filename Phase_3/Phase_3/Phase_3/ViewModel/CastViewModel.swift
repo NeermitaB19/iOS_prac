@@ -119,14 +119,14 @@ class CastViewModel: ObservableObject {
         transition(to: .disconnected)
         persist(nil)
     }
-    private func handleReconnectFailed() {
-        guard case .reconnecting = state else { return }
-        transition(to: .disconnected)   // triggers PlayerView's onChange -> dismiss the cover
-        persist(nil)
-        // Let the full-screen player finish dismissing before presenting the picker,
-        // otherwise UIKit complains about presenting while a presentation is in progress.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
-            self?.presentPicker()
-        }
-    }
+//    private func handleReconnectFailed() {
+//        guard case .reconnecting = state else { return }
+//        transition(to: .disconnected)   // triggers PlayerView's onChange -> dismiss the cover
+//        persist(nil)
+//        // Let the full-screen player finish dismissing before presenting the picker,
+//        // otherwise UIKit complains about presenting while a presentation is in progress.
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
+//            self?.presentPicker()
+//        }
+//    }
 }

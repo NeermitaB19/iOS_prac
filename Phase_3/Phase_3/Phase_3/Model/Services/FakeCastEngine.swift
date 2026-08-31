@@ -72,7 +72,7 @@ class FakeCastEngine: PlaybackEngine {
     }
     private let dvrWindow: TimeInterval = 1800   // 30-min DVR buffer
 
-    private let remoteStateSubject = CurrentValueSubject<RemoteMediaState, Never>(.vod(duration: 2700))
+    private let remoteStateSubject = CurrentValueSubject<RemoteMediaState, Never>(.vod(duration: 300))
     public var remoteStatePublisher: AnyPublisher<RemoteMediaState, Never> {
         remoteStateSubject.eraseToAnyPublisher()
     }
@@ -137,7 +137,7 @@ class FakeCastEngine: PlaybackEngine {
 
     func setStreamType(_ type: StreamType) {
         let fresh: RemoteMediaState = (type == .vod)
-            ? .vod(duration: 2700)
+            ? .vod(duration: 300)
             : .live(dvrWindow: dvrWindow, startedSecondsAgo: 600)
         remoteStateSubject.send(fresh)
     }

@@ -21,14 +21,22 @@ class MiniPlayerInteractor: ObservableObject {
 
     private let engine: PlaybackEngine
     private var cancellables = Set<AnyCancellable>()
-  
+    private let defaults: UserDefaults
+    private let nowPlayingKey = "nowPlayingItem"
+
     var viewStateBox: Bool { if case .loaded = viewState { return true }; return false }
     
-    init(engine: PlaybackEngine) {
+    init(engine: PlaybackEngine, defaults: UserDefaults = .standard) {
         self.engine = engine
+        self.defaults = defaults
     }
 
     func start() {
+        // Re-hydrate the last now-playing item so the mini bar reappears after a relaunch.
+        if let data = defaults.data(forKey: nowPlayingKey),
+           let item = try? JSONDecoder().decode(NowPlayingItem.self, from: data) {
+            engine.loadMedia(item)
+        }
         Publishers.CombineLatest(engine.nowPlayingPublisher,
                                  engine.remoteStatePublisher)      // <-- shared truth
             .receive(on: DispatchQueue.main)
@@ -53,6 +61,9 @@ class MiniPlayerInteractor: ObservableObject {
             artworkURL: media.posterURL
         )
         engine.loadMedia(item)
+        if let data = try? JSONEncoder().encode(item) {
+            defaults.set(data, forKey: nowPlayingKey)   // remember across relaunch
+        }
         print("tapped on poster")
     }
 

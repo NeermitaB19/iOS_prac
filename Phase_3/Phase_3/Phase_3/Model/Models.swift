@@ -62,7 +62,7 @@ enum PlaybackState : Equatable{
     case paused
 }
 
-struct NowPlayingItem: Equatable {
+struct NowPlayingItem: Equatable, Codable {
     let title: String
     let subtitle: String
     let artworkURL: URL?   // real poster image
