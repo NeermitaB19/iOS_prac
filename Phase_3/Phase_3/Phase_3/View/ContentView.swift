@@ -66,7 +66,7 @@ struct ContentView: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 Theme.Palette.background.ignoresSafeArea()
 

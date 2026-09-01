@@ -14,7 +14,7 @@ struct CastSheetView: View {
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 switch viewModel.state {
                 case .discovering, .disconnected:
