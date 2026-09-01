@@ -7,4 +7,4 @@
 - [x] Phase 5 - Expanded player + transport controls
 - [x] Phase 6 - Unit + snapshot tests (Mock/Spy conventions)
 - [x] Phase 7 - Polish: edge cases, accessibility, design tokens
-- [ ] Phase 8 - end-to-end FauxCast demo
+- [x] Phase 8 - end-to-end FauxCast demo

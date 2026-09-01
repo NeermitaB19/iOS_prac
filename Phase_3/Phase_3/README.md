@@ -9,10 +9,6 @@ There is **no Google Cast SDK, no `wbd-beam-swift` dependency, and no real
 network**. Everything Cast-like is simulated so the focus stays on the
 architecture and the mental model, not SDK plumbing.
 
-> This is the Phase 8 of the CAST iOS onboarding path. Phases 4–7
-> built the mini player, the expanded player, the tests, and the production
-> polish; this README ties them together and maps them onto the real
-> `ChromecastFeature` module.
 
 ---
 
